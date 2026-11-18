@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "baseline": "v4 + outputs/ddl, 31 tables",
+  "openapiVersion": "3.1.1",
+  "openapiDocuments": 5,
+  "operations": 88,
+  "dtoSchemas": 114,
+  "eventSchemas": 10,
+  "positiveExamples": 26,
+  "negativeExamplesRejected": 17,
+  "dbColumnAnnotationsChecked": 33,
+  "validationNetwork": "disabled",
+  "apiCallsPerformed": 0,
+  "paidProviderCallsPerformed": 0,
+  "runtimeAuthorizationOrSignatureValidation": "not performed",
+  "serverOrDatabaseIntegrationTests": "not performed",
+  "ddlSha256": "3490745d874651c420ecbbaf789845200bf67862ca41d12d76f9afa28582a625"
+}

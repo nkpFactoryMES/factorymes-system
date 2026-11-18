@@ -1,0 +1,5496 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MES DTOs v1.1 — v4 / validated 31-table baseline",
+  "$defs": {
+    "Id": {
+      "type": "string",
+      "pattern": "^[1-9][0-9]{0,18}$",
+      "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+    },
+    "Uuid": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "TargetId": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+    },
+    "Decimal": {
+      "type": "string",
+      "maxLength": 20,
+      "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+    },
+    "Counter": {
+      "type": "string",
+      "maxLength": 12,
+      "pattern": "^(?:0|[1-9][0-9]{0,11})$"
+    },
+    "Sequence": {
+      "type": "string",
+      "maxLength": 19,
+      "pattern": "^(?:0|[1-9][0-9]{0,18})$"
+    },
+    "UtcTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+      "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+    },
+    "Hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "Version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 999999999999
+    },
+    "Problem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 400,
+          "maximum": 599
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "instance": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "errors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "minItems": 0,
+            "maxItems": 20
+          }
+        }
+      },
+      "required": [
+        "type",
+        "title",
+        "status",
+        "code",
+        "correlationId"
+      ],
+      "additionalProperties": false
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "expectedVersion"
+      ],
+      "additionalProperties": false
+    },
+    "ReasonCommand": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "Ack": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "accepted",
+        "correlationId"
+      ],
+      "additionalProperties": false
+    },
+    "Session": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "login": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "WORKER"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "userId",
+        "login",
+        "name",
+        "roles"
+      ],
+      "additionalProperties": false
+    },
+    "CsrfToken": {
+      "type": "object",
+      "properties": {
+        "requestToken": {
+          "type": "string",
+          "maxLength": 2048,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "requestToken"
+      ],
+      "additionalProperties": false
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "password": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "login",
+        "password"
+      ],
+      "additionalProperties": false
+    },
+    "PasswordChange": {
+      "type": "object",
+      "properties": {
+        "currentPassword": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 1
+        },
+        "newPassword": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 12
+        }
+      },
+      "required": [
+        "currentPassword",
+        "newPassword"
+      ],
+      "additionalProperties": false
+    },
+    "UserCreate": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "ADMIN",
+            "WORKER"
+          ]
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "email",
+              "maxLength": 254
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "initialPassword": {
+          "type": "string",
+          "maxLength": 256,
+          "minLength": 12
+        }
+      },
+      "required": [
+        "login",
+        "name",
+        "role",
+        "initialPassword"
+      ],
+      "additionalProperties": false
+    },
+    "UserUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "WORKER"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "email",
+              "maxLength": 254
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "name",
+        "roles",
+        "email",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "USER_ACCOUNT.user_id"
+        },
+        "login": {
+          "type": "string",
+          "maxLength": 100,
+          "x-db-column": "USER_ACCOUNT.login"
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "x-db-column": "USER_ACCOUNT.name"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "ADMIN",
+              "WORKER"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "email": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 254
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "userId",
+        "login",
+        "name",
+        "roles",
+        "email",
+        "active",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "ProductCreate": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "unit": {
+          "const": "EA"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "name",
+        "unit",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "ProductUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "unit": {
+          "const": "EA"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "code",
+        "name",
+        "unit",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "PRODUCT.product_id"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "unit": {
+          "const": "EA"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "productId",
+        "code",
+        "name",
+        "unit",
+        "active",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "LineCreate": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "name",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "LineUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "code",
+        "name",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Line": {
+      "type": "object",
+      "properties": {
+        "lineId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "LINE.line_id"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "lineId",
+        "code",
+        "name",
+        "active",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "EquipmentCreate": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "lineId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "code",
+        "name",
+        "lineId",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "EquipmentUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "lineId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "code",
+        "name",
+        "lineId",
+        "active"
+      ],
+      "additionalProperties": false
+    },
+    "Equipment": {
+      "type": "object",
+      "properties": {
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "EQUIPMENT.equipment_id"
+        },
+        "code": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "lineId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "equipmentId",
+        "code",
+        "name",
+        "lineId",
+        "active",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "ChecklistDefinition": {
+      "type": "object",
+      "properties": {
+        "seq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "seq",
+        "label",
+        "required"
+      ],
+      "additionalProperties": false
+    },
+    "OrderCreate": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "assigneeId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "operationLabel": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "targetQty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "countMode": {
+          "type": "string",
+          "enum": [
+            "AUTO",
+            "MANUAL"
+          ]
+        },
+        "counterMappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plannedStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "plannedEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "checklist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChecklistDefinition"
+          },
+          "minItems": 0,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "productId",
+        "equipmentId",
+        "assigneeId",
+        "targetQty",
+        "countMode",
+        "counterMappingId",
+        "plannedStart",
+        "plannedEnd",
+        "checklist"
+      ],
+      "additionalProperties": false
+    },
+    "OrderDraftUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "productId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "assigneeId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "operationLabel": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "targetQty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "countMode": {
+          "type": "string",
+          "enum": [
+            "AUTO",
+            "MANUAL"
+          ]
+        },
+        "counterMappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plannedStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "plannedEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "checklist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChecklistDefinition"
+          },
+          "minItems": 0,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "productId",
+        "equipmentId",
+        "assigneeId",
+        "targetQty",
+        "countMode",
+        "counterMappingId",
+        "plannedStart",
+        "plannedEnd",
+        "checklist"
+      ],
+      "additionalProperties": false
+    },
+    "ChecklistItem": {
+      "type": "object",
+      "properties": {
+        "checkId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "WORK_CHECK_ITEM.check_id"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "checkedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "comment": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "checkId",
+        "seq",
+        "label",
+        "required",
+        "checked",
+        "checkedAt",
+        "comment"
+      ],
+      "additionalProperties": false
+    },
+    "ChecklistUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "checkId": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "checked": {
+                "type": "boolean"
+              },
+              "comment": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "checkId",
+              "checked",
+              "comment"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 30
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "CounterSnapshot": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "maxLength": 12,
+          "pattern": "^(?:0|[1-9][0-9]{0,11})$"
+        },
+        "sampleAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "receivedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "value",
+        "sampleAt",
+        "receivedAt"
+      ],
+      "additionalProperties": false
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "WORK_ORDER.order_id"
+        },
+        "orderNo": {
+          "type": "string",
+          "maxLength": 40,
+          "x-db-column": "WORK_ORDER.order_no"
+        },
+        "productId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "assigneeId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "operationLabel": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "targetQty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "countMode": {
+          "type": "string",
+          "enum": [
+            "AUTO",
+            "MANUAL"
+          ]
+        },
+        "counterMappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "plannedStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "plannedEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "DRAFT",
+            "RELEASED",
+            "RUNNING",
+            "PAUSED",
+            "SUBMITTED",
+            "CLOSED",
+            "CANCELLED"
+          ],
+          "x-db-column": "WORK_ORDER.status"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "checklist": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChecklistItem"
+          },
+          "minItems": 0,
+          "maxItems": 30
+        },
+        "startCounter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CounterSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "endCounter": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CounterSnapshot"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "counterInvalid": {
+          "type": "boolean"
+        },
+        "totalQty": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rejectQty": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "goodQty": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completionReason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "orderId",
+        "orderNo",
+        "productId",
+        "equipmentId",
+        "assigneeId",
+        "operationLabel",
+        "targetQty",
+        "countMode",
+        "counterMappingId",
+        "plannedStart",
+        "plannedEnd",
+        "status",
+        "version",
+        "checklist",
+        "startCounter",
+        "endCounter",
+        "counterInvalid",
+        "totalQty",
+        "rejectQty",
+        "goodQty",
+        "completionReason"
+      ],
+      "additionalProperties": false
+    },
+    "PauseRequest": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reasonCode": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "alarmId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "reasonCode"
+      ],
+      "additionalProperties": false
+    },
+    "SubmitRequest": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "completionReason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "expectedVersion"
+      ],
+      "additionalProperties": false
+    },
+    "EntryInput": {
+      "type": "object",
+      "properties": {
+        "clientEntryId": {
+          "type": "string",
+          "format": "uuid",
+          "x-db-column": "PRODUCTION_ENTRY.client_entry_id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "TOTAL",
+            "REJECT",
+            "REVERSAL",
+            "TOTAL_ADJUST_DOWN"
+          ],
+          "x-db-column": "PRODUCTION_ENTRY.kind"
+        },
+        "qty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999,
+          "x-db-column": "PRODUCTION_ENTRY.qty"
+        },
+        "reversalOf": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correctionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "clientEntryId",
+        "kind",
+        "qty",
+        "occurredAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "REVERSAL"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reversalOf",
+              "correctionId",
+              "reason"
+            ],
+            "properties": {
+              "reversalOf": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "correctionId": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1000,
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "TOTAL_ADJUST_DOWN"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "correctionId",
+              "reason"
+            ],
+            "properties": {
+              "correctionId": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "reason": {
+                "type": "string",
+                "maxLength": 1000,
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "REJECT"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason": {
+                "type": "string",
+                "maxLength": 1000,
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "x-server-intent-hash-column": "PRODUCTION_ENTRY.request_hash"
+    },
+    "EntryBatch": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EntryInput"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "entries"
+      ],
+      "additionalProperties": false
+    },
+    "Entry": {
+      "type": "object",
+      "properties": {
+        "entryId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "PRODUCTION_ENTRY.entry_id"
+        },
+        "orderId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "clientEntryId": {
+          "type": "string",
+          "format": "uuid",
+          "x-db-column": "PRODUCTION_ENTRY.client_entry_id"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "TOTAL",
+            "REJECT",
+            "REVERSAL",
+            "TOTAL_ADJUST_DOWN"
+          ],
+          "x-db-column": "PRODUCTION_ENTRY.kind"
+        },
+        "qty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999,
+          "x-db-column": "PRODUCTION_ENTRY.qty"
+        },
+        "reversalOf": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correctionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "recordedBy": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        }
+      },
+      "required": [
+        "entryId",
+        "orderId",
+        "clientEntryId",
+        "kind",
+        "qty",
+        "occurredAt",
+        "recordedBy"
+      ],
+      "additionalProperties": false
+    },
+    "EntryBatchResult": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "duplicate": {
+          "type": "boolean"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Entry"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        },
+        "totalQty": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "rejectQty": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "orderId",
+        "version",
+        "duplicate",
+        "entries",
+        "totalQty",
+        "rejectQty"
+      ],
+      "additionalProperties": false
+    },
+    "CorrectionRequest": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "CorrectionResolve": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "expectedOrderVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "resolutionNote": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "expectedOrderVersion",
+        "resolutionNote"
+      ],
+      "additionalProperties": false
+    },
+    "Correction": {
+      "type": "object",
+      "properties": {
+        "correctionId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "CORRECTION_REQUEST.correction_id"
+        },
+        "orderId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "orderVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "requestedBy": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "resolvedBy": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "resolvedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "correctionId",
+        "orderId",
+        "status",
+        "reason",
+        "version",
+        "orderVersion",
+        "requestedBy",
+        "resolvedBy",
+        "resolvedAt"
+      ],
+      "additionalProperties": false
+    },
+    "MappingInput": {
+      "type": "object",
+      "properties": {
+        "mappingId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "metricCode": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "sourcePath": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1
+        },
+        "dataType": {
+          "type": "string",
+          "enum": [
+            "DECIMAL",
+            "INTEGER",
+            "STRING"
+          ]
+        },
+        "valueKind": {
+          "type": "string",
+          "enum": [
+            "NUMBER",
+            "COUNTER",
+            "STATE"
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scale": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+        },
+        "offset": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "metricCode",
+        "sourcePath",
+        "dataType",
+        "valueKind",
+        "scale",
+        "offset",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "EquipmentSettings": {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "const": "HTTP"
+        },
+        "approvedEndpoint": {
+          "type": "string",
+          "maxLength": 500,
+          "minLength": 1
+        },
+        "pollIntervalMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 60000
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "staleSec": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "credentialRef": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MappingInput"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "protocol",
+        "approvedEndpoint",
+        "pollIntervalMs",
+        "timeoutMs",
+        "staleSec",
+        "mappings"
+      ],
+      "additionalProperties": false
+    },
+    "AiSettings": {
+      "type": "object",
+      "properties": {
+        "providerKind": {
+          "type": "string",
+          "enum": [
+            "CLOUD",
+            "LOCAL",
+            "MOCK"
+          ]
+        },
+        "approvedEndpoint": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 500
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "credentialRef": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 300000
+        }
+      },
+      "required": [
+        "providerKind",
+        "approvedEndpoint",
+        "model",
+        "timeoutMs"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "providerKind": {
+                "enum": [
+                  "CLOUD",
+                  "LOCAL"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "approvedEndpoint": {
+                "type": "string",
+                "maxLength": 500,
+                "minLength": 1
+              },
+              "model": {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              }
+            },
+            "required": [
+              "approvedEndpoint",
+              "model"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "providerKind": {
+                "const": "MOCK"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "approvedEndpoint": {
+                "type": "null"
+              },
+              "credentialRef": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EquipmentTargetCreate": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "connectorType": {
+          "const": "equipment-http"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "EQUIPMENT"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "settings": {
+          "$ref": "#/$defs/EquipmentSettings"
+        }
+      },
+      "required": [
+        "targetId",
+        "displayName",
+        "connectorType",
+        "enabled",
+        "kind",
+        "equipmentId",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "AiTargetCreate": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "connectorType": {
+          "const": "ai-http"
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "kind": {
+          "const": "AI"
+        },
+        "settings": {
+          "$ref": "#/$defs/AiSettings"
+        }
+      },
+      "required": [
+        "targetId",
+        "displayName",
+        "connectorType",
+        "enabled",
+        "kind",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "TargetCreate": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/EquipmentTargetCreate"
+        },
+        {
+          "$ref": "#/$defs/AiTargetCreate"
+        }
+      ]
+    },
+    "TargetConfigUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "expectedConfigVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        },
+        "settings": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/EquipmentSettings"
+            },
+            {
+              "$ref": "#/$defs/AiSettings"
+            }
+          ]
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "expectedConfigVersion",
+        "displayName",
+        "enabled",
+        "reason",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "TargetStateUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "expectedConfigVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "expectedConfigVersion",
+        "enabled",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "ResolvedMapping": {
+      "type": "object",
+      "properties": {
+        "mappingId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "metricCode": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "sourcePath": {
+          "type": "string",
+          "maxLength": 200,
+          "minLength": 1
+        },
+        "dataType": {
+          "type": "string",
+          "enum": [
+            "DECIMAL",
+            "INTEGER",
+            "STRING"
+          ]
+        },
+        "valueKind": {
+          "type": "string",
+          "enum": [
+            "NUMBER",
+            "COUNTER",
+            "STATE"
+          ]
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "scale": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+        },
+        "offset": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mappingId",
+        "metricCode",
+        "sourcePath",
+        "dataType",
+        "valueKind",
+        "unit",
+        "scale",
+        "offset",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "ResolvedEquipmentSettings": {
+      "type": "object",
+      "properties": {
+        "protocol": {
+          "const": "HTTP"
+        },
+        "approvedEndpoint": {
+          "type": "string",
+          "maxLength": 500,
+          "minLength": 1
+        },
+        "pollIntervalMs": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 60000
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000
+        },
+        "staleSec": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600
+        },
+        "credentialRef": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 200
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ResolvedMapping"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "protocol",
+        "approvedEndpoint",
+        "pollIntervalMs",
+        "timeoutMs",
+        "staleSec",
+        "credentialRef",
+        "mappings"
+      ],
+      "additionalProperties": false
+    },
+    "EquipmentConfigContent": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "kind": {
+          "const": "EQUIPMENT"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "connectorType": {
+          "const": "equipment-http"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "settings": {
+          "$ref": "#/$defs/ResolvedEquipmentSettings"
+        }
+      },
+      "required": [
+        "targetId",
+        "kind",
+        "equipmentId",
+        "connectorType",
+        "configVersion",
+        "enabled",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "AiConfigContent": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "kind": {
+          "const": "AI"
+        },
+        "connectorType": {
+          "const": "ai-http"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "settings": {
+          "$ref": "#/$defs/AiSettings"
+        }
+      },
+      "required": [
+        "targetId",
+        "kind",
+        "connectorType",
+        "configVersion",
+        "enabled",
+        "settings"
+      ],
+      "additionalProperties": false
+    },
+    "EquipmentResolvedConfig": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/EquipmentConfigContent"
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "content",
+        "configHash"
+      ],
+      "additionalProperties": false
+    },
+    "AiResolvedConfig": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "$ref": "#/$defs/AiConfigContent"
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "content",
+        "configHash"
+      ],
+      "additionalProperties": false
+    },
+    "ResolvedConfig": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/EquipmentResolvedConfig"
+        },
+        {
+          "$ref": "#/$defs/AiResolvedConfig"
+        }
+      ]
+    },
+    "Target": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$",
+          "x-db-column": "INTEGRATION_TARGET.target_code"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "EQUIPMENT",
+            "AI"
+          ]
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "equipmentId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "appliedConfigVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "connectionState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "CONNECTED",
+                "DISCONNECTED",
+                "RETRYING",
+                "CONFIG_ERROR"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastHeartbeatAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "config": {
+          "$ref": "#/$defs/ResolvedConfig"
+        }
+      },
+      "required": [
+        "targetId",
+        "kind",
+        "displayName",
+        "equipmentId",
+        "enabled",
+        "deleted",
+        "configVersion",
+        "version",
+        "appliedConfigVersion",
+        "connectionState",
+        "lastHeartbeatAt",
+        "config"
+      ],
+      "additionalProperties": false
+    },
+    "LeaseRequest": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "instanceId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "targetId",
+        "instanceId",
+        "configVersion",
+        "configHash"
+      ],
+      "additionalProperties": false
+    },
+    "LeaseResponse": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "instanceId": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "collectionAuthorization": {
+          "type": "string",
+          "maxLength": 8192,
+          "minLength": 20
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "receiveUntil": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "targetId",
+        "instanceId",
+        "configVersion",
+        "configHash",
+        "collectionAuthorization",
+        "validFrom",
+        "expiresAt",
+        "receiveUntil"
+      ],
+      "additionalProperties": false
+    },
+    "LeaseClaims": {
+      "type": "object",
+      "properties": {
+        "iss": {
+          "const": "mes-backend"
+        },
+        "aud": {
+          "const": "mes-equipment-collection"
+        },
+        "target_id": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "config_version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "config_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "instance_id": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "scope": {
+          "const": "telemetry:collect"
+        },
+        "iat": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "nbf": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "exp": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "iss",
+        "aud",
+        "target_id",
+        "config_version",
+        "config_hash",
+        "instance_id",
+        "scope",
+        "iat",
+        "nbf",
+        "exp"
+      ],
+      "additionalProperties": false
+    },
+    "ConfigApply": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "$ref": "#/$defs/EquipmentResolvedConfig"
+        },
+        "instanceId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "configuration",
+        "instanceId"
+      ],
+      "additionalProperties": false
+    },
+    "ConfigAck": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "appliedConfigVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "configurationAccepted": {
+          "type": "boolean"
+        },
+        "connectionState": {
+          "type": "string",
+          "enum": [
+            "CONNECTED",
+            "DISCONNECTED",
+            "RETRYING",
+            "CONFIG_ERROR"
+          ]
+        }
+      },
+      "required": [
+        "targetId",
+        "appliedConfigVersion",
+        "configurationAccepted",
+        "connectionState"
+      ],
+      "additionalProperties": false
+    },
+    "ConfigEventAck": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "APPLIED",
+            "ALREADY_APPLIED",
+            "SUPERSEDED"
+          ]
+        }
+      },
+      "required": [
+        "eventId",
+        "targetId",
+        "configVersion",
+        "outcome"
+      ],
+      "additionalProperties": false
+    },
+    "RuntimeReport": {
+      "type": "object",
+      "properties": {
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "instanceId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "appliedConfigVersion": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "connectionState": {
+          "type": "string",
+          "enum": [
+            "CONNECTED",
+            "DISCONNECTED",
+            "RETRYING",
+            "CONFIG_ERROR"
+          ]
+        },
+        "operatingState": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "RUNNING",
+                "IDLE",
+                "FAULT",
+                "STOPPED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reportedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "lastErrorCode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastError": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "targetId",
+        "instanceId",
+        "appliedConfigVersion",
+        "connectionState",
+        "reportedAt"
+      ],
+      "additionalProperties": false
+    },
+    "TelemetryMetric": {
+      "type": "object",
+      "properties": {
+        "metricCode": {
+          "type": "string",
+          "maxLength": 40,
+          "minLength": 1
+        },
+        "mappingId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "numericValue": {
+          "type": "string",
+          "maxLength": 20,
+          "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+        },
+        "textValue": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "quality": {
+          "type": "string",
+          "enum": [
+            "GOOD",
+            "BAD",
+            "UNCERTAIN"
+          ]
+        }
+      },
+      "required": [
+        "metricCode",
+        "mappingId",
+        "quality"
+      ],
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "numericValue"
+          ],
+          "not": {
+            "required": [
+              "textValue"
+            ]
+          }
+        },
+        {
+          "required": [
+            "textValue"
+          ],
+          "not": {
+            "required": [
+              "numericValue"
+            ]
+          }
+        }
+      ]
+    },
+    "TelemetryData": {
+      "type": "object",
+      "properties": {
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "instanceId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "streamId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "sequenceNo": {
+          "type": "string",
+          "maxLength": 19,
+          "pattern": "^(?:0|[1-9][0-9]{0,18})$"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TelemetryMetric"
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "required": [
+        "equipmentId",
+        "targetId",
+        "instanceId",
+        "streamId",
+        "sequenceNo",
+        "configVersion",
+        "configHash",
+        "metrics"
+      ],
+      "additionalProperties": false
+    },
+    "BatchAckItem": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "telemetryId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "STORED",
+            "DUPLICATE"
+          ]
+        },
+        "receivedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "eventId",
+        "telemetryId",
+        "outcome",
+        "receivedAt"
+      ],
+      "additionalProperties": false
+    },
+    "TelemetryBatchAck": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/BatchAckItem"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "items",
+        "correlationId"
+      ],
+      "additionalProperties": false
+    },
+    "SnapshotDescriptor": {
+      "type": "object",
+      "properties": {
+        "snapshotId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "periodStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "inputVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "coverage": {
+          "type": "string",
+          "maxLength": 8,
+          "pattern": "^(?:0(?:\\.[0-9]{1,6})?|1(?:\\.0{1,6})?)$"
+        },
+        "inputHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "snapshotId",
+        "equipmentId",
+        "periodStart",
+        "periodEnd",
+        "inputVersion",
+        "coverage",
+        "inputHash"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisInput": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "periodStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "coverage": {
+          "type": "string",
+          "maxLength": 8,
+          "pattern": "^(?:0(?:\\.[0-9]{1,6})?|1(?:\\.0{1,6})?)$"
+        },
+        "sampleCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "metricCode": {
+                "type": "string",
+                "maxLength": 40
+              },
+              "unit": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 20
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "minimum": {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+              },
+              "maximum": {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+              },
+              "mean": {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+              },
+              "last": {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+              }
+            },
+            "required": [
+              "metricCode",
+              "unit",
+              "minimum",
+              "maximum",
+              "mean",
+              "last"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 50
+        },
+        "downtimeSeconds": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "alarmCount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "equipmentId",
+        "periodStart",
+        "periodEnd",
+        "coverage",
+        "sampleCount",
+        "metrics",
+        "downtimeSeconds",
+        "alarmCount"
+      ],
+      "additionalProperties": false
+    },
+    "Snapshot": {
+      "type": "object",
+      "properties": {
+        "descriptor": {
+          "$ref": "#/$defs/SnapshotDescriptor"
+        },
+        "payload": {
+          "$ref": "#/$defs/AnalysisInput"
+        }
+      },
+      "required": [
+        "descriptor",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisRequest": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "periodStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "periodEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "analysisKind": {
+          "type": "string",
+          "enum": [
+            "MAINTENANCE_RISK",
+            "TREND_SUMMARY"
+          ]
+        }
+      },
+      "required": [
+        "requestId",
+        "equipmentId",
+        "targetId",
+        "periodStart",
+        "periodEnd",
+        "analysisKind"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionTestRequest": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "expectedConfigVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "requestId",
+        "expectedConfigVersion"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisRetry": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        },
+        "allowDuplicateExecution": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "reason",
+        "allowDuplicateExecution"
+      ],
+      "additionalProperties": false
+    },
+    "IntegrationJob": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid",
+          "x-db-column": "INTEGRATION_JOB.job_id"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "x-db-column": "INTEGRATION_JOB.request_id"
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "CONNECTION_TEST",
+            "AI_ANALYZE"
+          ],
+          "x-db-column": "INTEGRATION_JOB.operation"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "QUEUED",
+            "DISPATCHED",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "TIMED_OUT",
+            "CANCELLED",
+            "NOT_CONFIGURED",
+            "INSUFFICIENT_DATA"
+          ],
+          "x-db-column": "INTEGRATION_JOB.state"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "snapshot": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SnapshotDescriptor"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AnalysisResult"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "jobId",
+        "requestId",
+        "targetId",
+        "operation",
+        "state",
+        "attempt",
+        "snapshot",
+        "configVersion",
+        "deadline",
+        "version",
+        "errorCode",
+        "error",
+        "correlationId",
+        "results"
+      ],
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "minItems": 0,
+          "maxItems": 20
+        },
+        "inputHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "configHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "summary",
+        "observations",
+        "recommendations",
+        "inputHash",
+        "configHash"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisResultInput": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "CLOUD",
+            "LOCAL",
+            "MOCK"
+          ]
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "inputPeriodStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "inputPeriodEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "dataCoverage": {
+          "type": "string",
+          "maxLength": 8,
+          "pattern": "^(?:0(?:\\.[0-9]{1,6})?|1(?:\\.0{1,6})?)$"
+        },
+        "resultVersion": {
+          "const": 1
+        },
+        "risk": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "mockFlag": {
+          "type": "boolean"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "jobId",
+        "attempt",
+        "provider",
+        "model",
+        "inputPeriodStart",
+        "inputPeriodEnd",
+        "dataCoverage",
+        "resultVersion",
+        "risk",
+        "evidence",
+        "mockFlag",
+        "completedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "provider": {
+                "const": "MOCK"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "mockFlag": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "mockFlag": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "AnalysisResult": {
+      "type": "object",
+      "properties": {
+        "resultId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "AI_ANALYSIS_RESULT.result_id"
+        },
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "provider": {
+          "type": "string",
+          "enum": [
+            "CLOUD",
+            "LOCAL",
+            "MOCK"
+          ]
+        },
+        "model": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "inputPeriodStart": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "inputPeriodEnd": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "dataCoverage": {
+          "type": "string",
+          "maxLength": 8,
+          "pattern": "^(?:0(?:\\.[0-9]{1,6})?|1(?:\\.0{1,6})?)$"
+        },
+        "resultVersion": {
+          "const": 1
+        },
+        "risk": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "evidence": {
+          "$ref": "#/$defs/Evidence"
+        },
+        "mockFlag": {
+          "type": "boolean"
+        },
+        "completedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "accepted": {
+          "type": "boolean",
+          "x-db-column": "AI_ANALYSIS_RESULT.accepted"
+        }
+      },
+      "required": [
+        "resultId",
+        "jobId",
+        "attempt",
+        "provider",
+        "model",
+        "inputPeriodStart",
+        "inputPeriodEnd",
+        "dataCoverage",
+        "resultVersion",
+        "risk",
+        "evidence",
+        "mockFlag",
+        "completedAt",
+        "accepted"
+      ],
+      "additionalProperties": false
+    },
+    "JobStatusReport": {
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "RUNNING",
+            "FAILED",
+            "TIMED_OUT",
+            "NOT_CONFIGURED",
+            "INSUFFICIENT_DATA"
+          ]
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "attempt",
+        "configVersion",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "JobStatusAck": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "APPLIED",
+            "DUPLICATE",
+            "STALE_IGNORED"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "QUEUED",
+            "DISPATCHED",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "TIMED_OUT",
+            "CANCELLED",
+            "NOT_CONFIGURED",
+            "INSUFFICIENT_DATA"
+          ]
+        }
+      },
+      "required": [
+        "jobId",
+        "attempt",
+        "outcome",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "ResultAck": {
+      "type": "object",
+      "properties": {
+        "resultId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "RECORDED",
+            "DUPLICATE",
+            "LATE_RECORDED"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "QUEUED",
+            "DISPATCHED",
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "TIMED_OUT",
+            "CANCELLED",
+            "NOT_CONFIGURED",
+            "INSUFFICIENT_DATA"
+          ]
+        }
+      },
+      "required": [
+        "resultId",
+        "jobId",
+        "attempt",
+        "accepted",
+        "outcome",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "AiDispatch": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "operation": {
+          "const": "AI_ANALYZE"
+        },
+        "snapshot": {
+          "$ref": "#/$defs/SnapshotDescriptor"
+        },
+        "configuration": {
+          "$ref": "#/$defs/AiResolvedConfig"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "jobId",
+        "requestId",
+        "attempt",
+        "operation",
+        "snapshot",
+        "configuration",
+        "deadline",
+        "correlationId"
+      ],
+      "additionalProperties": false
+    },
+    "JobReceipt": {
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "executionState": {
+          "type": "string",
+          "enum": [
+            "ACCEPTED",
+            "ALREADY_RUNNING",
+            "ALREADY_COMPLETED"
+          ]
+        },
+        "durableCompletion": {
+          "const": false
+        }
+      },
+      "required": [
+        "jobId",
+        "attempt",
+        "executionState",
+        "durableCompletion"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionTestDispatch": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "configuration": {
+          "$ref": "#/$defs/ResolvedConfig"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "requestId",
+        "configuration",
+        "deadline",
+        "correlationId"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionTestResult": {
+      "type": "object",
+      "properties": {
+        "requestId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "configVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reachable": {
+          "type": "boolean"
+        },
+        "latencyMs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 300000
+        },
+        "checkedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "errorCode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "requestId",
+        "targetId",
+        "configVersion",
+        "reachable",
+        "latencyMs",
+        "checkedAt"
+      ],
+      "additionalProperties": false
+    },
+    "AiCancel": {
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "attempt",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "RuleWrite": {
+      "type": "object",
+      "properties": {
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "mappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "COMM_LOST"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "INFO",
+            "WARN",
+            "CRITICAL"
+          ]
+        },
+        "triggerHigh": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearBelow": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "holdSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearHoldSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "equipmentId",
+        "targetId",
+        "mappingId",
+        "kind",
+        "severity",
+        "triggerHigh",
+        "clearBelow",
+        "holdSec",
+        "clearHoldSec",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "RuleUpdate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "mappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "COMM_LOST"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "INFO",
+            "WARN",
+            "CRITICAL"
+          ]
+        },
+        "triggerHigh": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearBelow": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "holdSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearHoldSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "equipmentId",
+        "targetId",
+        "mappingId",
+        "kind",
+        "severity",
+        "triggerHigh",
+        "clearBelow",
+        "holdSec",
+        "clearHoldSec",
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "Rule": {
+      "type": "object",
+      "properties": {
+        "ruleId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "ALARM_RULE.rule_id"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "targetId": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+        },
+        "mappingId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "COMM_LOST"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "INFO",
+            "WARN",
+            "CRITICAL"
+          ]
+        },
+        "triggerHigh": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearBelow": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 20,
+              "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "holdSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "clearHoldSec": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "suppressUntil": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "ruleId",
+        "equipmentId",
+        "targetId",
+        "mappingId",
+        "kind",
+        "severity",
+        "triggerHigh",
+        "clearBelow",
+        "holdSec",
+        "clearHoldSec",
+        "enabled",
+        "version",
+        "suppressUntil"
+      ],
+      "additionalProperties": false
+    },
+    "Alarm": {
+      "type": "object",
+      "properties": {
+        "alarmId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "ALARM.alarm_id"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "ruleId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "RECOVERED",
+            "CLOSED"
+          ]
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "COMM_LOST"
+          ]
+        },
+        "severity": {
+          "type": "string",
+          "enum": [
+            "INFO",
+            "WARN",
+            "CRITICAL"
+          ]
+        },
+        "openedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "recoveredAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ackBy": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ackAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closeKind": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "NORMAL",
+                "FORCED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closeReason": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "alarmId",
+        "equipmentId",
+        "ruleId",
+        "status",
+        "kind",
+        "severity",
+        "openedAt",
+        "recoveredAt",
+        "ackBy",
+        "ackAt",
+        "closedAt",
+        "closeKind",
+        "closeReason",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "ActionCreate": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "ownerId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "ownerId",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "ActionComplete": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "expectedAlarmVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "result": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "expectedAlarmVersion",
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    "AlarmAction": {
+      "type": "object",
+      "properties": {
+        "actionId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "ALARM_ACTION.action_id"
+        },
+        "alarmId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "ownerId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "IN_PROGRESS",
+            "DONE"
+          ]
+        },
+        "content": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        },
+        "result": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "alarmVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "actionId",
+        "alarmId",
+        "ownerId",
+        "status",
+        "content",
+        "result",
+        "version",
+        "alarmVersion"
+      ],
+      "additionalProperties": false
+    },
+    "Notification": {
+      "type": "object",
+      "properties": {
+        "notificationId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "NOTIFICATION.notification_id"
+        },
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "body": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "alarmId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "orderId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "analysisResultId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "readAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "notificationId",
+        "eventId",
+        "title",
+        "body",
+        "alarmId",
+        "orderId",
+        "analysisResultId",
+        "createdAt",
+        "readAt"
+      ],
+      "additionalProperties": false
+    },
+    "ReadAck": {
+      "type": "object",
+      "properties": {
+        "notificationId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "readAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "notificationId",
+        "readAt"
+      ],
+      "additionalProperties": false
+    },
+    "Delivery": {
+      "type": "object",
+      "properties": {
+        "deliveryId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "DELIVERY.delivery_id"
+        },
+        "notificationId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "recipientId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "DELIVERY.recipient_id"
+        },
+        "channel": {
+          "type": "string",
+          "enum": [
+            "EMAIL",
+            "CHAT"
+          ]
+        },
+        "destinationKey": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "SENT",
+            "FAILED"
+          ]
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "nextAttemptAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sentAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "lastError": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "deliveryId",
+        "notificationId",
+        "recipientId",
+        "channel",
+        "destinationKey",
+        "status",
+        "attempts",
+        "nextAttemptAt",
+        "sentAt",
+        "lastError",
+        "version"
+      ],
+      "additionalProperties": false
+    },
+    "Dashboard": {
+      "type": "object",
+      "properties": {
+        "asOf": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "equipment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "equipmentId": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "operatingState": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "RUNNING",
+                      "IDLE",
+                      "FAULT",
+                      "STOPPED"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "connectionState": {
+                "type": "string",
+                "enum": [
+                  "CONNECTED",
+                  "DISCONNECTED",
+                  "RETRYING",
+                  "CONFIG_ERROR"
+                ]
+              },
+              "lastSampleAt": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+                    "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "stale": {
+                "type": "boolean"
+              },
+              "runningOrderId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[1-9][0-9]{0,18}$",
+                    "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "equipmentId",
+              "operatingState",
+              "connectionState",
+              "lastSampleAt",
+              "stale",
+              "runningOrderId"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "today": {
+          "type": "object",
+          "properties": {
+            "totalQty": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            "rejectQty": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            "openAlarmCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            "oee": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 20,
+                  "pattern": "^-?(?:0|[1-9][0-9]{0,11})(?:\\.[0-9]{1,6})?$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "oeeUnavailableReason": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "totalQty",
+            "rejectQty",
+            "openAlarmCount",
+            "oee",
+            "oeeUnavailableReason"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "asOf",
+        "equipment",
+        "today"
+      ],
+      "additionalProperties": false
+    },
+    "DailyProduction": {
+      "type": "object",
+      "properties": {
+        "businessDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "equipmentId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "productId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+        },
+        "totalQty": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "rejectQty": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "refreshedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "businessDate",
+        "equipmentId",
+        "productId",
+        "totalQty",
+        "rejectQty",
+        "refreshedAt"
+      ],
+      "additionalProperties": false
+    },
+    "JobRun": {
+      "type": "object",
+      "properties": {
+        "jobRunId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "JOB_RUN.job_run_id"
+        },
+        "jobKey": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "scheduledFor": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED"
+          ]
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "endedAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "affectedRows": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 999999999999
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 1000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "jobRunId",
+        "jobKey",
+        "scheduledFor",
+        "attempt",
+        "status",
+        "startedAt",
+        "endedAt",
+        "affectedRows",
+        "error"
+      ],
+      "additionalProperties": false
+    },
+    "AuditEvent": {
+      "type": "object",
+      "properties": {
+        "auditId": {
+          "type": "string",
+          "pattern": "^[1-9][0-9]{0,18}$",
+          "description": "DB ID encoded as a decimal string; server also enforces Int64 range.",
+          "x-db-column": "AUDIT_EVENT.audit_id"
+        },
+        "actorId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "principal": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "action": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "entityType": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "entityId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 64
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "detail": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "auditId",
+        "actorId",
+        "principal",
+        "action",
+        "entityType",
+        "entityId",
+        "detail",
+        "occurredAt"
+      ],
+      "additionalProperties": false
+    },
+    "BatchRunRequest": {
+      "type": "object",
+      "properties": {
+        "scheduledFor": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "reason": {
+          "type": "string",
+          "maxLength": 1000,
+          "minLength": 1
+        }
+      },
+      "required": [
+        "scheduledFor",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "DispatchBatchRequest": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "DispatchBatchResult": {
+      "type": "object",
+      "properties": {
+        "examined": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "delivered": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "retryPending": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        }
+      },
+      "required": [
+        "examined",
+        "delivered",
+        "retryPending",
+        "failed"
+      ],
+      "additionalProperties": false
+    },
+    "RebuildRequest": {
+      "type": "object",
+      "properties": {
+        "businessDate": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "businessDate"
+      ],
+      "additionalProperties": false
+    },
+    "RetentionRequest": {
+      "type": "object",
+      "properties": {
+        "cutoff": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "maxEvents": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "cutoff",
+        "maxEvents"
+      ],
+      "additionalProperties": false
+    },
+    "RetentionResult": {
+      "type": "object",
+      "properties": {
+        "deletedEvents": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "protectedEvents": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 999999999999
+        },
+        "hasMore": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "deletedEvents",
+        "protectedEvents",
+        "hasMore"
+      ],
+      "additionalProperties": false
+    },
+    "ExecutionPolicy": {
+      "type": "object",
+      "properties": {
+        "cloudAiEnabled": {
+          "const": false
+        },
+        "externalDeliveryEnabled": {
+          "const": false
+        },
+        "defaultAiProvider": {
+          "const": "MOCK"
+        },
+        "note": {
+          "type": "string",
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "cloudAiEnabled",
+        "externalDeliveryEnabled",
+        "defaultAiProvider",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "TelemetryBatch": {
+      "type": "object",
+      "properties": {
+        "collectionAuthorization": {
+          "type": "string",
+          "maxLength": 8192,
+          "minLength": 20
+        },
+        "configuration": {
+          "$ref": "#/$defs/EquipmentResolvedConfig"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "mes.events.schema.json#/$defs/TelemetryCollected"
+          },
+          "minItems": 1,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "collectionAuthorization",
+        "configuration",
+        "events"
+      ],
+      "additionalProperties": false
+    },
+    "TelemetryEnvelope": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "mes.events.schema.json#/$defs/TelemetryCollected"
+        },
+        "configuration": {
+          "$ref": "#/$defs/EquipmentResolvedConfig"
+        }
+      },
+      "required": [
+        "event",
+        "configuration"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisCompletedEnvelope": {
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "mes.events.schema.json#/$defs/AnalysisCompleted"
+        }
+      },
+      "required": [
+        "event"
+      ],
+      "additionalProperties": false
+    },
+    "ActionStart": {
+      "type": "object",
+      "properties": {
+        "expectedVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        },
+        "expectedAlarmVersion": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 999999999999
+        }
+      },
+      "required": [
+        "expectedVersion",
+        "expectedAlarmVersion"
+      ],
+      "additionalProperties": false
+    },
+    "AlarmActionPage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AlarmAction"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "nextCursor"
+      ],
+      "additionalProperties": false
+    },
+    "AnalysisJobPage": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IntegrationJob"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "nextCursor": {
+          "anyOf": [
+            {
+              "type": "string",
+              "maxLength": 2048
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "nextCursor"
+      ],
+      "additionalProperties": false
+    },
+    "ConnectionWatchResult": {
+      "type": "object",
+      "properties": {
+        "examined": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "opened": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "recovered": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "checkedAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        }
+      },
+      "required": [
+        "examined",
+        "opened",
+        "recovered",
+        "unchanged",
+        "checkedAt"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

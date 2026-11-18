@@ -1,0 +1,121 @@
+<svg xmlns="htt<LOCAL_PATH>" width="2600" height="1660" viewBox="0 0 2600 1660"><rect width="100%" height="100%" fill="#F4F7FB"/>
+<text x="65" y="38" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="58" font-weight="700" fill="#142438">제조 MES · 연동 아키텍처</text>
+<text x="68" y="122" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="26" font-weight="400" fill="#53677D">TARGET DESIGN  v1.0  |  2026.11.12  |  설계 기준본 · 구현 및 성능 검증 전</text>
+<text x="68" y="192" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="26" font-weight="700" fill="#2563EB">01   사용자 요청 · 연동 명령</text>
+<rect x="65" y="250" width="310" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="83" y="270" width="7" height="205" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="107" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">웹 클라이언트</text>
+<text x="107" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">Blazor</text>
+<text x="107" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">관리자 · 작업자</text>
+<text x="107" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">대시보드 · 업무 입력</text>
+<rect x="465" y="250" width="440" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="483" y="270" width="7" height="205" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="507" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">업무 백엔드</text>
+<text x="507" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">ASP.NET Core</text>
+<text x="507" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">로그인 · 역할 / 담당 범위</text>
+<text x="507" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">생산 · 설정 · 분석 작업</text>
+<text x="507" y="452" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">내부 API · 감사 기록</text>
+<rect x="1055" y="250" width="440" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1073" y="270" width="7" height="205" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="1097" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">연동 게이트웨이</text>
+<text x="1097" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">ASP.NET Core</text>
+<text x="1097" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">대상 선택 · 설정 조회</text>
+<text x="1097" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">서비스 인증 · 요청 분기</text>
+<text x="1097" y="452" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">요청 추적 · 실행 허가</text>
+<rect x="1650" y="250" width="445" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1668" y="270" width="7" height="205" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1692" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">설비 커넥터</text>
+<text x="1692" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">C# Worker + 내부 HTTP API</text>
+<text x="1692" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">프로토콜별 연결 · 수집</text>
+<text x="1692" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">재접속 · 표준 데이터 변환</text>
+<text x="1692" y="452" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">로그인과 독립된 상시 실행</text>
+<rect x="2235" y="250" width="300" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="2253" y="270" width="7" height="205" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="2277" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">설비 / 외부 API</text>
+<text x="2277" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">최초: 시뮬레이터</text>
+<text x="2277" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">HTTP 우선</text>
+<text x="2277" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">PLC 방식은 후속</text>
+<polyline points="375,365 465,365" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="465,365 449.0,358.0 449.0,372.0" fill="#2563EB"/>
+<polyline points="905,365 1055,365" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="1055,365 1039.0,358.0 1039.0,372.0" fill="#2563EB"/>
+<polyline points="1495,365 1650,365" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="1650,365 1634.0,358.0 1634.0,372.0" fill="#2563EB"/>
+<polyline points="2095,365 2235,365" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="2235,365 2219.0,358.0 2219.0,372.0" fill="#2563EB"/>
+<text x="925" y="316" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#2563EB">연동 요청</text>
+<rect x="1650" y="660" width="445" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1668" y="680" width="7" height="205" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="1692" y="684" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">AI 커넥터</text>
+<text x="1692" y="736" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">C# API + Provider Adapter</text>
+<text x="1692" y="786" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Cloud / Local / Mock</text>
+<text x="1692" y="824" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">비동기 분석 · 결과 검증</text>
+<text x="1692" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">모델 실행 서버는 교체 가능</text>
+<rect x="2235" y="660" width="300" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="2253" y="680" width="7" height="205" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="2277" y="684" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">AI 제공자</text>
+<text x="2277" y="736" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">외부 / 선택 서비스</text>
+<text x="2277" y="786" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Cloud API</text>
+<text x="2277" y="824" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Local HTTP API</text>
+<text x="2277" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Mock 명시</text>
+<polyline points="1495,420 1570,420 1570,775 1650,775" fill="none" stroke="#7950C8" stroke-width="4"/>
+<polygon points="1650,775 1634.0,768.0 1634.0,782.0" fill="#7950C8"/>
+<polyline points="2095,775 2235,775" fill="none" stroke="#7950C8" stroke-width="4"/>
+<polygon points="2235,775 2219.0,768.0 2219.0,782.0" fill="#7950C8"/>
+<text x="1585" y="535" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="21" font-weight="400" fill="#7950C8">AI 요청</text>
+<rect x="1055" y="660" width="440" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1073" y="680" width="7" height="205" rx="3" fill="#C77912" stroke="#C77912" stroke-width="2"/>
+<text x="1097" y="684" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#C77912">Redis 설정 캐시</text>
+<text x="1097" y="736" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">원본이 아닌 실행용 캐시</text>
+<text x="1097" y="786" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">설비 / AI 연결 설정</text>
+<text x="1097" y="824" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">버전 · TTL · 비밀 참조</text>
+<text x="1097" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">캐시 미스 → 내부 설정 API</text>
+<polyline points="1275,495 1275,660" fill="none" stroke="#C77912" stroke-width="4"/>
+<polygon points="1275,660 1282.0,644.0 1268.0,644.0" fill="#C77912"/>
+<text x="1300" y="550" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="22" font-weight="400" fill="#C77912">설정 조회</text>
+<rect x="465" y="660" width="440" height="245" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="483" y="680" width="7" height="205" rx="3" fill="#C77912" stroke="#C77912" stroke-width="2"/>
+<text x="507" y="684" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#C77912">Oracle</text>
+<text x="507" y="736" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">업무 백엔드가 소유</text>
+<text x="507" y="786" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">업무 · 설정 원본 · 버전</text>
+<text x="507" y="824" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">측정값 · 경보 · 분석 결과</text>
+<text x="507" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Outbox · 작업 상태</text>
+<polyline points="685,495 685,660" fill="none" stroke="#C77912" stroke-width="4"/>
+<polygon points="685,660 692.0,644.0 678.0,644.0" fill="#C77912"/>
+<text x="710" y="550" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="22" font-weight="400" fill="#C77912">조회 / 저장</text>
+<polyline points="1055,840 975,840 975,565 905,565 905,460" fill="none" stroke="#C77912" stroke-width="4" stroke-dasharray="11 9"/>
+<polygon points="905,460 898.0,476.0 912.0,476.0" fill="#C77912"/>
+<text x="930" y="933" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">캐시 미스 시 설정 API 조회 · 사용 허가는 원본 재검증</text>
+<rect x="65" y="1040" width="2470" height="330" rx="18" fill="#EAF5F5" stroke="#BCDCDD" stroke-width="2"/>
+<text x="95" y="1060" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="28" font-weight="700" fill="#087F8C">02   수집 데이터 · 결과 반영  /  사용자 요청 경로와 분리</text>
+<rect x="95" y="1125" width="420" height="210" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="113" y="1145" width="7" height="170" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="137" y="1149" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">설비 커넥터</text>
+<text x="137" y="1201" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">장비 데이터 수집</text>
+<text x="137" y="1251" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">설비 ID · 측정 시각 · 순번</text>
+<rect x="630" y="1125" width="500" height="210" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="648" y="1145" width="7" height="170" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="672" y="1149" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">업무 백엔드 내부 API</text>
+<text x="672" y="1201" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">서비스 인증 · 검증 · 중복 방지</text>
+<text x="672" y="1251" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">측정 수집 / AI 결과 수신</text>
+<rect x="1245" y="1125" width="450" height="210" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1263" y="1145" width="7" height="170" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1287" y="1149" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">Oracle + Outbox</text>
+<text x="1287" y="1201" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">저장 완료 후 수신 확인</text>
+<text x="1287" y="1251" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">이력 저장 · 경보 생성</text>
+<rect x="1810" y="1125" width="680" height="210" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1828" y="1145" width="7" height="170" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1852" y="1149" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">대시보드 · 알림 · 분석 이력</text>
+<text x="1852" y="1201" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">업무 백엔드 조회 / 실시간 갱신</text>
+<text x="1852" y="1251" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">전달 재시도 · Quartz 예약 집계</text>
+<polyline points="515,1230 630,1230" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="630,1230 614.0,1223.0 614.0,1237.0" fill="#087F8C"/>
+<polyline points="1130,1230 1245,1230" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="1245,1230 1229.0,1223.0 1229.0,1237.0" fill="#087F8C"/>
+<polyline points="1695,1230 1810,1230" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="1810,1230 1794.0,1223.0 1794.0,1237.0" fill="#087F8C"/>
+<rect x="65" y="1410" width="2470" height="175" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<text x="95" y="1430" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="700" fill="#53677D">DEPLOYMENT &amp; BOUNDARIES</text>
+<text x="95" y="1473" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#142438">Docker Compose: Web · Backend · Integration Gateway · Equipment Connector · AI Connector · Jobs · Oracle · Redis · Simulator</text>
+<text x="95" y="1521" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#53677D">내부 서비스는 외부 직접 접근 제한  |  Quartz: 집계·예약·재처리  |  Local AI / Broker는 선택 구성  |  YARP는 필수 구성에서 제외</text>
+</svg>

@@ -1,0 +1,828 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MES domain events v1 — v4 / 31-table baseline",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/TelemetryCollected"
+    },
+    {
+      "$ref": "#/$defs/TelemetryAccepted"
+    },
+    {
+      "$ref": "#/$defs/ConfigChanged"
+    },
+    {
+      "$ref": "#/$defs/AlarmChanged"
+    },
+    {
+      "$ref": "#/$defs/NotificationCreated"
+    },
+    {
+      "$ref": "#/$defs/NotificationRead"
+    },
+    {
+      "$ref": "#/$defs/AnalysisRequested"
+    },
+    {
+      "$ref": "#/$defs/AnalysisCompleted"
+    },
+    {
+      "$ref": "#/$defs/AnalysisRecorded"
+    },
+    {
+      "$ref": "#/$defs/JobStateChanged"
+    }
+  ],
+  "$defs": {
+    "TelemetryCollected": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.telemetry.collected.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.equipment-connector"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "$ref": "mes.schemas.json#/$defs/TelemetryData"
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Device samples. No authorization token is persisted in the event."
+    },
+    "TelemetryAccepted": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.telemetry.accepted.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "telemetryId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "sourceEventId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "equipmentId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "targetId": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+            },
+            "configVersion": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "sampleAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            "receivedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "$ref": "mes.schemas.json#/$defs/TelemetryMetric"
+              },
+              "minItems": 1,
+              "maxItems": 50
+            }
+          },
+          "required": [
+            "telemetryId",
+            "sourceEventId",
+            "equipmentId",
+            "targetId",
+            "configVersion",
+            "sampleAt",
+            "receivedAt",
+            "metrics"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Written with source telemetry; independent replay needs the copied minimum metrics."
+    },
+    "ConfigChanged": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.integration.config.changed.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "targetId": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+            },
+            "configVersion": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "configuration": {
+              "$ref": "mes.schemas.json#/$defs/ResolvedConfig"
+            }
+          },
+          "required": [
+            "targetId",
+            "configVersion",
+            "configuration"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Approved non-secret compiled configuration snapshot; no generic URLs from callers."
+    },
+    "AlarmChanged": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.alarm.changed.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "alarmId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "equipmentId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "ruleId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "change": {
+              "type": "string",
+              "enum": [
+                "OPENED",
+                "RECOVERED",
+                "ACKNOWLEDGED",
+                "CLOSED",
+                "FORCE_CLOSED"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ACTIVE",
+                "RECOVERED",
+                "CLOSED"
+              ]
+            },
+            "severity": {
+              "type": "string",
+              "enum": [
+                "INFO",
+                "WARN",
+                "CRITICAL"
+              ]
+            }
+          },
+          "required": [
+            "alarmId",
+            "equipmentId",
+            "ruleId",
+            "version",
+            "change",
+            "status",
+            "severity"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Alarm lifecycle; not a personal inbox read event."
+    },
+    "NotificationCreated": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.notification.created.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "notificationId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 200
+            },
+            "body": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "recipientIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,18}$",
+                "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+              },
+              "minItems": 1,
+              "maxItems": 100
+            },
+            "alarmId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]{0,18}$",
+                  "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "orderId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]{0,18}$",
+                  "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "analysisResultId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[1-9][0-9]{0,18}$",
+                  "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "notificationId",
+            "title",
+            "body",
+            "recipientIds",
+            "alarmId",
+            "orderId",
+            "analysisResultId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Internal fan-out metadata. At most one cause; do not send all recipients to browsers."
+    },
+    "NotificationRead": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.notification.read.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "notificationId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "userId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "readAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+              "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+            }
+          },
+          "required": [
+            "notificationId",
+            "userId",
+            "readAt"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Optional live UI synchronization only; read command is durably stored in the recipient row."
+    },
+    "AnalysisRequested": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.ai.analysis.requested.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "$ref": "mes.schemas.json#/$defs/AiDispatch"
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Transactional Outbox job dispatch payload; actor/audience authority comes from authenticated calls."
+    },
+    "AnalysisCompleted": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.ai.analysis.completed.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.ai-connector"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "$ref": "mes.schemas.json#/$defs/AnalysisResultInput"
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Proposed connector result. accepted/resultId are assigned exclusively by the backend."
+    },
+    "AnalysisRecorded": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.ai.analysis.recorded.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "resultId": {
+              "type": "string",
+              "pattern": "^[1-9][0-9]{0,18}$",
+              "description": "DB ID encoded as a decimal string; server also enforces Int64 range."
+            },
+            "jobId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "attempt": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "accepted": {
+              "type": "boolean"
+            },
+            "mockFlag": {
+              "type": "boolean"
+            },
+            "risk": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "resultId",
+            "jobId",
+            "attempt",
+            "accepted",
+            "mockFlag",
+            "risk"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Only accepted results can trigger the maintenance notification policy."
+    },
+    "JobStateChanged": {
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "const": "mes.integration.job.state.changed.v1"
+        },
+        "schemaVersion": {
+          "const": 1
+        },
+        "source": {
+          "const": "mes.backend"
+        },
+        "occurredAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d{1,6})?Z$",
+          "description": "UTC RFC3339 ending in Z; precision up to 6 fractional digits."
+        },
+        "correlationId": {
+          "type": "string",
+          "maxLength": 64,
+          "minLength": 1
+        },
+        "causationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "jobId": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "attempt": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "state": {
+              "type": "string",
+              "enum": [
+                "QUEUED",
+                "DISPATCHED",
+                "RUNNING",
+                "SUCCEEDED",
+                "FAILED",
+                "TIMED_OUT",
+                "CANCELLED",
+                "NOT_CONFIGURED",
+                "INSUFFICIENT_DATA"
+              ]
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 999999999999
+            },
+            "errorCode": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "jobId",
+            "attempt",
+            "state",
+            "version",
+            "errorCode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "eventId",
+        "type",
+        "schemaVersion",
+        "source",
+        "occurredAt",
+        "correlationId",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "Current job transitions; not an AI_ATTEMPT table."
+    }
+  }
+}

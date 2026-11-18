@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "owner": "nkpFactoryMES",
+  "repositories": [
+    {
+      "service": "web",
+      "repo": "factorymes-web",
+      "ref": "v1.0.0",
+      "commit": "4a67d489e89029658f5fc4f9558d170879c423da"
+    },
+    {
+      "service": "mes-backend",
+      "repo": "factorymes-backend",
+      "ref": "v1.0.0",
+      "commit": "91af840e87c189d4bd7f1de7259a292e71558909"
+    },
+    {
+      "service": "integration-gateway",
+      "repo": "factorymes-integration-gateway",
+      "ref": "v1.0.0",
+      "commit": "fb8f2b008261f2a44e1d099cfbf447a82ee3472e"
+    },
+    {
+      "service": "equipment-connector",
+      "repo": "factorymes-equipment-connector",
+      "ref": "v1.0.0",
+      "commit": "2246447569e0cb1fdaa9debe31874afe42d06697"
+    },
+    {
+      "service": "ai-connector",
+      "repo": "factorymes-ai-connector",
+      "ref": "v1.0.0",
+      "commit": "e676cffdde35c5ae0ec1e477238805b4bd326c4d"
+    },
+    {
+      "service": "jobs-worker",
+      "repo": "factorymes-jobs-worker",
+      "ref": "v1.0.0",
+      "commit": "d520dd567a29ffe082167e2ce6200ad47c2dfdd6"
+    },
+    {
+      "service": "equipment-simulator",
+      "repo": "factorymes-equipment-simulator",
+      "ref": "v1.0.0",
+      "commit": "3fac5f7ef700245e356c209407a83dcb51e352a6"
+    },
+    {
+      "service": "modbus-simulator",
+      "repo": "factorymes-modbus-simulator",
+      "ref": "v1.0.0",
+      "commit": "85c7ad9fa8a4da2f69fa7e31f678ea8c71956683"
+    },
+    {
+      "service": "chat-receiver",
+      "repo": "factorymes-chat-receiver",
+      "ref": "v1.0.0",
+      "commit": "734e9359b8ce8852ebde81a8b054aad95492e045"
+    }
+  ]
+}

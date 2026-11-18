@@ -1,0 +1,13 @@
+**/bin
+**/obj
+**/node_modules
+.git
+.idea
+.secrets
+.env
+.env.*
+verification-results
+artifacts
+.deploy
+
+.nuget/

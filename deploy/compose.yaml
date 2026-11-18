@@ -1,0 +1,399 @@
+name: factorymes
+services:
+  web:
+    image: factorymes/web:dev
+    build:
+      context: ../../factorymes-web
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:8443
+      Kestrel__Certificates__Default__Path: /run/secrets/https_pfx
+    networks:
+      front: null
+      app:
+        ipv4_address: ${FACTORYMES_WEB_ADDRESS:?Run tools/configure-local.ps1}
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.Web.dll
+      - --healthcheck
+      - https://localhost:8443/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    ports:
+    - 127.0.0.1:7443:8443
+    volumes:
+    - session-keys:/var/factorymes/keys
+    secrets:
+    - https_pfx
+    - source: https_password
+      target: Kestrel__Certificates__Default__Password
+    depends_on:
+      mes-backend:
+        condition: service_healthy
+  mes-backend:
+    image: factorymes/mes-backend:dev
+    build:
+      context: ../../factorymes-backend
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+      Security__TrustedProxyAddress: ${FACTORYMES_WEB_ADDRESS:?Run tools/configure-local.ps1}
+    networks:
+    - app
+    - oracle-data
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.Backend.dll
+      - --healthcheck
+      - http://localhost:8080/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    volumes:
+    - session-keys:/var/factorymes/keys
+    secrets:
+    - oracle_connection
+    - service_private_key
+    - service_public_key
+    - collection_private_key
+    - collection_public_key
+    - service_clients
+    depends_on:
+      oracle:
+        condition: service_healthy
+  integration-gateway:
+    image: factorymes/integration-gateway:dev
+    build:
+      context: ../../factorymes-integration-gateway
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+    - app
+    - cache-data
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.Gateway.dll
+      - --healthcheck
+      - http://localhost:8080/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    secrets:
+    - service_public_key
+    - integration-gateway_client_secret
+    depends_on:
+      mes-backend:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+  equipment-connector:
+    image: factorymes/equipment-connector:dev
+    build:
+      context: ../../factorymes-equipment-connector
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+    - app
+    - simulation
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.EquipmentConnector.dll
+      - --healthcheck
+      - http://localhost:8080/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    secrets:
+    - service_public_key
+    - collection_public_key
+    - equipment-connector_client_secret
+    depends_on:
+      integration-gateway:
+        condition: service_healthy
+      equipment-simulator:
+        condition: service_healthy
+      modbus-simulator:
+        condition: service_healthy
+  modbus-simulator:
+    image: factorymes/modbus-simulator:dev
+    build:
+      context: ../../factorymes-modbus-simulator
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+      Logging__LogLevel__FactoryMES: Debug
+    networks:
+    - simulation
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.ModbusSimulator.dll
+      - --healthcheck
+      - http://localhost:8080/health/live
+      interval: 10s
+      timeout: 5s
+      retries: 8
+      start_period: 15s
+  ai-connector:
+    image: factorymes/ai-connector:dev
+    build:
+      context: ../../factorymes-ai-connector
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+    - app
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.AiConnector.dll
+      - --healthcheck
+      - http://localhost:8080/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    secrets:
+    - service_public_key
+    - ai-connector_client_secret
+    depends_on:
+      mes-backend:
+        condition: service_healthy
+  jobs-worker:
+    image: factorymes/jobs-worker:dev
+    build:
+      context: ../../factorymes-jobs-worker
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+    - app
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.Jobs.dll
+      - --healthcheck
+      - http://localhost:8080/health/ready
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+    secrets:
+    - service_public_key
+    - jobs-worker_client_secret
+    depends_on:
+      mes-backend:
+        condition: service_healthy
+  equipment-simulator:
+    image: factorymes/equipment-simulator:dev
+    build:
+      context: ../../factorymes-equipment-simulator
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+    - simulation
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test:
+      - CMD
+      - dotnet
+      - FactoryMES.Simulator.dll
+      - --healthcheck
+      - http://localhost:8080/health/live
+      interval: 15s
+      timeout: 7s
+      retries: 8
+      start_period: 30s
+  tooling:
+    image: factorymes/tooling:dev
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    environment:
+      ExecutionPolicy__CloudAiEnabled: 'false'
+      ExecutionPolicy__ExternalDeliveryEnabled: 'false'
+      ASPNETCORE_ENVIRONMENT: Development
+      MES_REPORT_PATH: /reports/scaffold-verification.json
+      MES_WEB_URL: https://web:8443
+      MES_BACKEND_URL: http://mes-backend:8080
+    networks:
+    - app
+    - oracle-data
+    init: true
+    restart: 'no'
+    profiles:
+    - tools
+    secrets:
+    - oracle_connection
+    - admin_password
+    - worker_password
+    - portal_password
+    - https_public_cert
+    - verification_client_secret
+    volumes:
+    - ../verification-results:/reports
+    depends_on:
+      oracle:
+        condition: service_healthy
+  oracle:
+    image: gvenzl/oracle-free:23-slim
+    environment:
+      ORACLE_PASSWORD_FILE: /run/secrets/oracle_root_password
+      APP_USER: factorymes
+      APP_USER_PASSWORD_FILE: /run/secrets/oracle_app_password
+    ports:
+    - 127.0.0.1:1527:1521
+    volumes:
+    - oracle-data:/opt/oracle/oradata
+    - ../database/oracle:/opt/factorymes/schema:ro
+    secrets:
+    - oracle_root_password
+    - oracle_app_password
+    - source: oracle_bootstrap_sql
+      target: /container-entrypoint-initdb.d/01_factorymes.sql
+    networks:
+    - oracle-data
+    - oracle-local
+    healthcheck:
+      test:
+      - CMD
+      - healthcheck.sh
+      interval: 10s
+      timeout: 7s
+      retries: 30
+      start_period: 120s
+    shm_size: 1gb
+    mem_limit: 3g
+    restart: unless-stopped
+  redis:
+    image: redis:7.2-alpine
+    command:
+    - redis-server
+    - --save
+    - ''
+    - --appendonly
+    - 'no'
+    - --maxmemory
+    - 128mb
+    - --maxmemory-policy
+    - allkeys-lru
+    networks:
+    - cache-data
+    healthcheck:
+      test:
+      - CMD
+      - redis-cli
+      - ping
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+secrets:
+  oracle_root_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/oracle_root_password
+  oracle_app_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/oracle_app_password
+  oracle_connection:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/oracle_connection
+  oracle_bootstrap_sql:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/oracle_bootstrap_sql
+  admin_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/admin_password
+  worker_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/worker_password
+  portal_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/portal_password
+  service_private_key:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/service_private_key
+  service_public_key:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/service_public_key
+  collection_private_key:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/collection_private_key
+  collection_public_key:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/collection_public_key
+  service_clients:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/service_clients
+  integration-gateway_client_secret:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/integration-gateway_client_secret
+  equipment-connector_client_secret:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/equipment-connector_client_secret
+  ai-connector_client_secret:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/ai-connector_client_secret
+  jobs-worker_client_secret:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/jobs-worker_client_secret
+  verification_client_secret:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/verification_client_secret
+  https_pfx:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/https_pfx
+  https_password:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/https_password
+  https_public_cert:
+    file: ${FACTORYMES_SECRETS_DIR:?Run tools/configure-local.ps1}/https_public_cert
+volumes:
+  oracle-data: {}
+  session-keys: {}
+networks:
+  front: {}
+  app:
+    internal: true
+    ipam:
+      config:
+      - subnet: ${FACTORYMES_APP_SUBNET:?Run tools/configure-local.ps1}
+  oracle-local: {}
+  oracle-data:
+    internal: true
+  cache-data:
+    internal: true
+  simulation:
+    internal: true

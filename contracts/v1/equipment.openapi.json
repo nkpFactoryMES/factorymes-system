@@ -1,0 +1,303 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "MES Equipment Connector internal API",
+    "version": "1.0.0",
+    "description": "Design contract only; Oracle v4 / outputs/ddl (31 tables). No deployed implementation, no paid service invocation."
+  },
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "servers": [
+    {
+      "url": "http://equipment-connector:8080"
+    }
+  ],
+  "paths": {
+    "/internal/v1/equipment/{targetId}/desired-state": {
+      "put": {
+        "operationId": "applyEquipmentConfiguration",
+        "summary": "설비 설정·희망 상태 적용",
+        "description": "Path target==configuration content target; same version same hash idempotent; same version different hash409; lower version ignored409. enabled=false stops new collection. Config admission != connected. Lease requested independently before any read.",
+        "tags": [
+          "System"
+        ],
+        "parameters": [
+          {
+            "name": "targetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$"
+            },
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation. See business rules and row scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/ConfigAck"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed JSON or schema validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing/invalid authentication",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Role/scope/CSRF denied",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource absent or outside row scope",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Version/state/idempotency conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business validation or collection authorization rejected",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required dependency unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-tables": [],
+        "x-allowed-callers": [
+          "integration-gateway"
+        ],
+        "x-required-scopes": [
+          "equipment:configure"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "mes.schemas.json#/$defs/ConfigApply"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal/v1/equipment/connection-tests": {
+      "post": {
+        "operationId": "testEquipmentConnection",
+        "summary": "설비 연결 확인",
+        "description": "Equipment subtype only; approved HTTP endpoint; no PLC writes or AI inference; timeout respects total deadline.",
+        "tags": [
+          "System"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation. See business rules and row scope.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/ConnectionTestResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Malformed JSON or schema validation failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing/invalid authentication",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Role/scope/CSRF denied",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource absent or outside row scope",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Version/state/idempotency conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Payload limit exceeded",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business validation or collection authorization rejected",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required dependency unavailable",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "mes.schemas.json#/$defs/Problem"
+                }
+              }
+            }
+          }
+        },
+        "x-tables": [],
+        "x-allowed-callers": [
+          "integration-gateway"
+        ],
+        "x-required-scopes": [
+          "equipment:connection:test"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "mes.schemas.json#/$defs/ConnectionTestDispatch"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ServiceBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Service token; validate issuer/audience/expiry/scope and target/instance bindings."
+      }
+    }
+  },
+  "security": [
+    {
+      "ServiceBearer": []
+    }
+  ]
+}

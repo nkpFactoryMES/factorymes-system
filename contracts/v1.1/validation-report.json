@@ -1,0 +1,39 @@
+{
+  "status": "passed",
+  "contractVersion": "1.1.0",
+  "publicOperations": 73,
+  "backendInternalOperations": 14,
+  "newOperations": 10,
+  "newOperationPositiveExamples": 10,
+  "baseline": "v4 + outputs/ddl, 31 tables",
+  "openapiVersion": "3.1.1",
+  "openapiDocuments": 5,
+  "operations": 98,
+  "dtoSchemas": 118,
+  "eventSchemas": 10,
+  "positiveExamples": 36,
+  "negativeExamplesRejected": 22,
+  "dbColumnAnnotationsChecked": 33,
+  "validationNetwork": "disabled",
+  "apiCallsPerformed": 0,
+  "paidProviderCallsPerformed": 0,
+  "runtimeAuthorizationOrSignatureValidation": "not performed",
+  "serverOrDatabaseIntegrationTests": "not performed",
+  "ddlSha256": "3490745d874651c420ecbbaf789845200bf67862ca41d12d76f9afa28582a625",
+  "operationsByDocument": {
+    "ai.openapi.json": 3,
+    "backend-internal.openapi.json": 14,
+    "equipment.openapi.json": 2,
+    "gateway.openapi.json": 6,
+    "public.openapi.json": 73
+  },
+  "inheritedWarnings": [],
+  "originalMethodValidation": {
+    "status": "passed",
+    "openapi_spec_validator": "passed",
+    "jsonschema_Draft202012Validator": "passed"
+  },
+  "ddlRawSha256": "c6f264c5edab63fb0fba4c6c8e32f8cc258f602d97163affa4b0ce14100c5830",
+  "ddlHashNormalization": "ddlSha256 is SHA-256 after UTF-8 BOM removal and CRLF/CR -> LF normalization; ddlRawSha256 hashes raw bytes. Same 01_tables.sql.",
+  "severityAlignedWithDDL": true
+}

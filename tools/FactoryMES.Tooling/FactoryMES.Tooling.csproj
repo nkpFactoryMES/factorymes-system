@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="FactoryMES.Contracts" />
+    <PackageReference Include="FactoryMES.Foundation" />
+    <PackageReference Include="FactoryMES.Backend.TestSupport" />
+    <PackageReference Include="FactoryMES.EquipmentConnector.TestSupport" />
+  </ItemGroup>
+</Project>

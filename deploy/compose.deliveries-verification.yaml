@@ -1,0 +1,4 @@
+services:
+  tooling:
+    secrets:
+    - jobs-worker_client_secret

@@ -1,0 +1,103 @@
+<svg xmlns="htt<LOCAL_PATH>" width="2400" height="1560" viewBox="0 0 2400 1560"><rect width="100%" height="100%" fill="#F4F7FB"/>
+<text x="65" y="38" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="54" font-weight="700" fill="#142438">설정 변경에서 데이터 수집까지</text>
+<text x="68" y="116" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#53677D">RUNTIME FLOWS  v1.0  |  설계 기준본 · 수치와 장애 정책은 구현 시 검증</text>
+<text x="65" y="193" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="28" font-weight="700" fill="#2563EB">A   설정 등록 · 변경</text>
+<rect x="65" y="250" width="510" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="83" y="270" width="7" height="175" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="107" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">1  관리자 등록</text>
+<text x="107" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="107" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">역할 · 대상 범위 검증</text>
+<text x="107" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">주소 · 태그 · 주기 입력</text>
+<rect x="650" y="250" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="668" y="270" width="7" height="175" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="692" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">2  Oracle 트랜잭션</text>
+<text x="692" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="692" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">설정 + 버전 증가 + Outbox</text>
+<text x="692" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">화면에는 저장 / 적용 상태 분리</text>
+<rect x="1225" y="250" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1243" y="270" width="7" height="175" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="1267" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">3  캐시 무효화</text>
+<text x="1267" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1267" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Worker → 게이트웨이 통지</text>
+<text x="1267" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">실패 재시도 · 역순 이벤트 무시</text>
+<rect x="1800" y="250" width="530" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1818" y="270" width="7" height="175" rx="3" fill="#2563EB" stroke="#2563EB" stroke-width="2"/>
+<text x="1842" y="274" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#2563EB">4  최신 설정 적용</text>
+<text x="1842" y="326" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1842" y="376" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">원본 API 조회 → Redis 적재</text>
+<text x="1842" y="414" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">커넥터 갱신 · 적용 버전 회신</text>
+<polyline points="575,350 650,350" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="650,350 634.0,343.0 634.0,357.0" fill="#2563EB"/>
+<polyline points="1150,350 1225,350" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="1225,350 1209.0,343.0 1209.0,357.0" fill="#2563EB"/>
+<polyline points="1725,350 1800,350" fill="none" stroke="#2563EB" stroke-width="4"/>
+<polygon points="1800,350 1784.0,343.0 1784.0,357.0" fill="#2563EB"/>
+<text x="65" y="523" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="28" font-weight="700" fill="#087F8C">B   상시 수집 · 저장</text>
+<rect x="65" y="580" width="510" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="83" y="600" width="7" height="175" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="107" y="604" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">1  실행 허가 갱신</text>
+<text x="107" y="656" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="107" y="706" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">5초마다 확인 · 허가 15초</text>
+<text x="107" y="744" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">사용중지 / 갱신 실패 → 중단</text>
+<rect x="650" y="580" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="668" y="600" width="7" height="175" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="692" y="604" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">2  프로토콜별 수집</text>
+<text x="692" y="656" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="692" y="706" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">허가된 설비만 연결</text>
+<text x="692" y="744" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">로그아웃해도 수집 유지</text>
+<rect x="1225" y="580" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1243" y="600" width="7" height="175" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1267" y="604" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">3  내부 API 수신</text>
+<text x="1267" y="656" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1267" y="706" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">스키마 · 순번 · 시각 검증</text>
+<text x="1267" y="744" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">중복 방지 · 데이터 / Outbox 저장</text>
+<rect x="1800" y="580" width="530" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1818" y="600" width="7" height="175" rx="3" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1842" y="604" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#087F8C">4  화면 · 경보 반영</text>
+<text x="1842" y="656" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1842" y="706" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">DB 커밋 후 ACK · 재전송 허용</text>
+<text x="1842" y="744" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">미수신 구간 / 지연 데이터 표시</text>
+<polyline points="575,680 650,680" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="650,680 634.0,673.0 634.0,687.0" fill="#087F8C"/>
+<polyline points="1150,680 1225,680" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="1225,680 1209.0,673.0 1209.0,687.0" fill="#087F8C"/>
+<polyline points="1725,680 1800,680" fill="none" stroke="#087F8C" stroke-width="4"/>
+<polygon points="1800,680 1784.0,673.0 1784.0,687.0" fill="#087F8C"/>
+<text x="65" y="853" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="28" font-weight="700" fill="#7950C8">C   AI 분석 · 비동기 처리</text>
+<rect x="65" y="910" width="510" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="83" y="930" width="7" height="175" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="107" y="934" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">1  분석 요청</text>
+<text x="107" y="986" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="107" y="1036" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">사용자 또는 Quartz</text>
+<text x="107" y="1074" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">기간 · 설비 · 제공자 지정</text>
+<rect x="650" y="910" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="668" y="930" width="7" height="175" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="692" y="934" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">2  작업 저장 · 분기</text>
+<text x="692" y="986" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="692" y="1036" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Backend 작업 ID + Outbox</text>
+<text x="692" y="1074" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Gateway → AI Connector</text>
+<rect x="1225" y="910" width="500" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1243" y="930" width="7" height="175" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="1267" y="934" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">3  제공자 실행</text>
+<text x="1267" y="986" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1267" y="1036" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">Cloud / Local / Mock</text>
+<text x="1267" y="1074" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">시간 제한 · 키 미설정 구분</text>
+<rect x="1800" y="910" width="530" height="215" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1818" y="930" width="7" height="175" rx="3" fill="#7950C8" stroke="#7950C8" stroke-width="2"/>
+<text x="1842" y="934" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="31" font-weight="700" fill="#7950C8">4  결과 회신 · 저장</text>
+<text x="1842" y="986" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D"></text>
+<text x="1842" y="1036" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">작업 ID로 중복 결과 방지</text>
+<text x="1842" y="1074" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="24" font-weight="400" fill="#142438">모델 · 근거 기간 · 실패 기록</text>
+<polyline points="575,1010 650,1010" fill="none" stroke="#7950C8" stroke-width="4"/>
+<polygon points="650,1010 634.0,1003.0 634.0,1017.0" fill="#7950C8"/>
+<polyline points="1150,1010 1225,1010" fill="none" stroke="#7950C8" stroke-width="4"/>
+<polygon points="1225,1010 1209.0,1003.0 1209.0,1017.0" fill="#7950C8"/>
+<polyline points="1725,1010 1800,1010" fill="none" stroke="#7950C8" stroke-width="4"/>
+<polygon points="1800,1010 1784.0,1003.0 1784.0,1017.0" fill="#7950C8"/>
+<rect x="65" y="1190" width="2265" height="280" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<text x="95" y="1215" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="700" fill="#53677D">CONSISTENCY &amp; FAILURE POLICY</text>
+<text x="95" y="1262" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#142438">Oracle = 설정 원본  /  Redis = 캐시  /  비밀정보 원문 대신 credentialRef 사용</text>
+<text x="95" y="1306" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#142438">Redis 장애: 내부 설정 API로 제한적 우회  /  원본 확인 불가: 신규 실행 거절, 활성 수집은 허가 만료 후 중단</text>
+<text x="95" y="1350" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#142438">설정 TTL 60초만으로 사용중지를 보장하지 않음  /  원본 재검증 기반 허가 15초를 적용 목표로 사용</text>
+<text x="95" y="1394" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="400" fill="#142438">전송은 중복될 수 있음: 측정 이벤트·분석 작업·외부 알림별 멱등 처리  /  무손실·즉시 중단은 미보장</text>
+</svg>

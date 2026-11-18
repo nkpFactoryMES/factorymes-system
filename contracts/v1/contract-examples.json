@@ -1,0 +1,882 @@
+{
+  "notice": "Static fixtures only. Tokens/signatures are NOT real; no HTTP calls, no external sends, no API billing.",
+  "positive": [
+    {
+      "name": "TelemetryCollected",
+      "schema": "mes.events.schema.json#/$defs/TelemetryCollected",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000064",
+        "type": "mes.telemetry.collected.v1",
+        "schemaVersion": 1,
+        "source": "mes.equipment-connector",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "equipmentId": "101",
+          "targetId": "FILLER-01",
+          "instanceId": "equipment-connector-1",
+          "streamId": "00000000-0000-0000-0000-00000000012c",
+          "sequenceNo": "1024",
+          "configVersion": 7,
+          "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+          "metrics": [
+            {
+              "metricCode": "total_count",
+              "mappingId": "301",
+              "numericValue": "524",
+              "unit": "EA",
+              "quality": "GOOD"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "TelemetryAccepted",
+      "schema": "mes.events.schema.json#/$defs/TelemetryAccepted",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000065",
+        "type": "mes.telemetry.accepted.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "telemetryId": "601",
+          "sourceEventId": "00000000-0000-0000-0000-000000000064",
+          "equipmentId": "101",
+          "targetId": "FILLER-01",
+          "configVersion": 7,
+          "sampleAt": "2026-11-12T14:00:05Z",
+          "receivedAt": "2026-11-12T14:00:06Z",
+          "metrics": [
+            {
+              "metricCode": "total_count",
+              "mappingId": "301",
+              "numericValue": "524",
+              "unit": "EA",
+              "quality": "GOOD"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ConfigChanged",
+      "schema": "mes.events.schema.json#/$defs/ConfigChanged",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000066",
+        "type": "mes.integration.config.changed.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "targetId": "FILLER-01",
+          "configVersion": 7,
+          "configuration": {
+            "content": {
+              "targetId": "FILLER-01",
+              "kind": "EQUIPMENT",
+              "equipmentId": "101",
+              "connectorType": "equipment-http",
+              "configVersion": 7,
+              "enabled": true,
+              "settings": {
+                "protocol": "HTTP",
+                "approvedEndpoint": "http://equipment-simulator:8080/equipment/FILLER-01",
+                "pollIntervalMs": 5000,
+                "timeoutMs": 2000,
+                "staleSec": 20,
+                "credentialRef": null,
+                "mappings": [
+                  {
+                    "mappingId": "301",
+                    "metricCode": "total_count",
+                    "sourcePath": "$.totalCount",
+                    "dataType": "INTEGER",
+                    "valueKind": "COUNTER",
+                    "unit": "EA",
+                    "scale": "1",
+                    "offset": "0",
+                    "enabled": true
+                  }
+                ]
+              }
+            },
+            "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd"
+          }
+        }
+      }
+    },
+    {
+      "name": "AlarmChanged",
+      "schema": "mes.events.schema.json#/$defs/AlarmChanged",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000067",
+        "type": "mes.alarm.changed.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "alarmId": "701",
+          "equipmentId": "101",
+          "ruleId": "702",
+          "version": 1,
+          "change": "OPENED",
+          "status": "ACTIVE",
+          "severity": "HIGH"
+        }
+      }
+    },
+    {
+      "name": "NotificationCreated",
+      "schema": "mes.events.schema.json#/$defs/NotificationCreated",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000068",
+        "type": "mes.notification.created.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "notificationId": "801",
+          "title": "설비 온도 확인",
+          "body": "시연용 알림입니다.",
+          "recipientIds": [
+            "1",
+            "2"
+          ],
+          "alarmId": "701",
+          "orderId": null,
+          "analysisResultId": null
+        }
+      }
+    },
+    {
+      "name": "NotificationRead",
+      "schema": "mes.events.schema.json#/$defs/NotificationRead",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000069",
+        "type": "mes.notification.read.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "notificationId": "801",
+          "userId": "2",
+          "readAt": "2026-11-12T14:00:05Z"
+        }
+      }
+    },
+    {
+      "name": "AnalysisRequested",
+      "schema": "mes.events.schema.json#/$defs/AnalysisRequested",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-00000000006a",
+        "type": "mes.ai.analysis.requested.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "jobId": "00000000-0000-0000-0000-0000000000c8",
+          "requestId": "00000000-0000-0000-0000-0000000000c9",
+          "attempt": 1,
+          "operation": "AI_ANALYZE",
+          "snapshot": {
+            "snapshotId": "401",
+            "equipmentId": "101",
+            "periodStart": "2026-11-12T13:00:00Z",
+            "periodEnd": "2026-11-12T14:00:00Z",
+            "inputVersion": 1,
+            "coverage": "0.98",
+            "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "configuration": {
+            "content": {
+              "targetId": "AI-MOCK-01",
+              "kind": "AI",
+              "connectorType": "ai-http",
+              "configVersion": 1,
+              "enabled": true,
+              "settings": {
+                "providerKind": "MOCK",
+                "approvedEndpoint": null,
+                "model": "mock-maintenance-v1",
+                "credentialRef": null,
+                "timeoutMs": 5000
+              }
+            },
+            "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+          },
+          "deadline": "2026-11-12T14:05:00Z",
+          "correlationId": "00000000-0000-0000-0000-0000000000ca"
+        }
+      }
+    },
+    {
+      "name": "AnalysisCompleted",
+      "schema": "mes.events.schema.json#/$defs/AnalysisCompleted",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-00000000006b",
+        "type": "mes.ai.analysis.completed.v1",
+        "schemaVersion": 1,
+        "source": "mes.ai-connector",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "jobId": "00000000-0000-0000-0000-0000000000c8",
+          "attempt": 1,
+          "provider": "MOCK",
+          "model": "mock-maintenance-v1",
+          "inputPeriodStart": "2026-11-12T13:00:00Z",
+          "inputPeriodEnd": "2026-11-12T14:00:00Z",
+          "dataCoverage": "0.98",
+          "resultVersion": 1,
+          "risk": "LOW",
+          "evidence": {
+            "summary": "모의 분석 결과입니다. 실제 예측이 아닙니다.",
+            "observations": [
+              "시뮬레이터 데이터의 모의 추세"
+            ],
+            "recommendations": [
+              "실제 모델 연결 후 검증 필요"
+            ],
+            "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+          },
+          "mockFlag": true,
+          "completedAt": "2026-11-12T14:00:05Z"
+        }
+      }
+    },
+    {
+      "name": "AnalysisRecorded",
+      "schema": "mes.events.schema.json#/$defs/AnalysisRecorded",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-00000000006c",
+        "type": "mes.ai.analysis.recorded.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "resultId": "901",
+          "jobId": "00000000-0000-0000-0000-0000000000c8",
+          "attempt": 1,
+          "accepted": true,
+          "mockFlag": true,
+          "risk": "LOW"
+        }
+      }
+    },
+    {
+      "name": "JobStateChanged",
+      "schema": "mes.events.schema.json#/$defs/JobStateChanged",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-00000000006d",
+        "type": "mes.integration.job.state.changed.v1",
+        "schemaVersion": 1,
+        "source": "mes.backend",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "jobId": "00000000-0000-0000-0000-0000000000c8",
+          "attempt": 1,
+          "state": "SUCCEEDED",
+          "version": 4,
+          "errorCode": null
+        }
+      }
+    },
+    {
+      "name": "설비 설정 원본",
+      "schema": "mes.schemas.json#/$defs/EquipmentResolvedConfig",
+      "value": {
+        "content": {
+          "targetId": "FILLER-01",
+          "kind": "EQUIPMENT",
+          "equipmentId": "101",
+          "connectorType": "equipment-http",
+          "configVersion": 7,
+          "enabled": true,
+          "settings": {
+            "protocol": "HTTP",
+            "approvedEndpoint": "http://equipment-simulator:8080/equipment/FILLER-01",
+            "pollIntervalMs": 5000,
+            "timeoutMs": 2000,
+            "staleSec": 20,
+            "credentialRef": null,
+            "mappings": [
+              {
+                "mappingId": "301",
+                "metricCode": "total_count",
+                "sourcePath": "$.totalCount",
+                "dataType": "INTEGER",
+                "valueKind": "COUNTER",
+                "unit": "EA",
+                "scale": "1",
+                "offset": "0",
+                "enabled": true
+              }
+            ]
+          }
+        },
+        "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd"
+      }
+    },
+    {
+      "name": "Mock AI 설정",
+      "schema": "mes.schemas.json#/$defs/AiResolvedConfig",
+      "value": {
+        "content": {
+          "targetId": "AI-MOCK-01",
+          "kind": "AI",
+          "connectorType": "ai-http",
+          "configVersion": 1,
+          "enabled": true,
+          "settings": {
+            "providerKind": "MOCK",
+            "approvedEndpoint": null,
+            "model": "mock-maintenance-v1",
+            "credentialRef": null,
+            "timeoutMs": 5000
+          }
+        },
+        "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+      }
+    },
+    {
+      "name": "작업 초안",
+      "schema": "mes.schemas.json#/$defs/OrderCreate",
+      "value": {
+        "productId": "11",
+        "equipmentId": "101",
+        "assigneeId": "2",
+        "targetQty": 1000,
+        "countMode": "AUTO",
+        "counterMappingId": "301",
+        "plannedStart": "2026-11-13T00:00:00Z",
+        "plannedEnd": "2026-11-13T02:00:00Z",
+        "checklist": [
+          {
+            "seq": 1,
+            "label": "시작 전 점검",
+            "required": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "작업 중지",
+      "schema": "mes.schemas.json#/$defs/PauseRequest",
+      "value": {
+        "expectedVersion": 4,
+        "reasonCode": "EQUIPMENT_CHECK",
+        "note": "시뮬레이터 설비 점검",
+        "alarmId": "701"
+      }
+    },
+    {
+      "name": "실적 배치",
+      "schema": "mes.schemas.json#/$defs/EntryBatch",
+      "value": {
+        "expectedVersion": 5,
+        "entries": [
+          {
+            "clientEntryId": "00000000-0000-0000-0000-000000000190",
+            "kind": "REJECT",
+            "qty": 3,
+            "reason": "CAP_DAMAGE",
+            "occurredAt": "2026-11-12T14:00:05Z"
+          }
+        ]
+      }
+    },
+    {
+      "name": "감소 정정",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000191",
+        "kind": "TOTAL_ADJUST_DOWN",
+        "qty": 2,
+        "correctionId": "501",
+        "reason": "중복 카운트 확인",
+        "occurredAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "원본 역분개",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000192",
+        "kind": "REVERSAL",
+        "qty": 3,
+        "reversalOf": "601",
+        "correctionId": "501",
+        "reason": "불량 사유 정정",
+        "occurredAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "서명 토큰 클레임 형식만 검증",
+      "schema": "mes.schemas.json#/$defs/LeaseClaims",
+      "value": {
+        "iss": "mes-backend",
+        "aud": "mes-equipment-collection",
+        "target_id": "FILLER-01",
+        "config_version": 7,
+        "config_hash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+        "instance_id": "equipment-connector-1",
+        "scope": "telemetry:collect",
+        "iat": 1794492000,
+        "nbf": 1794492000,
+        "exp": 1794492015
+      }
+    },
+    {
+      "name": "수집 배치 (가짜 토큰 예제)",
+      "schema": "mes.schemas.json#/$defs/TelemetryBatch",
+      "value": {
+        "collectionAuthorization": "EXAMPLE_ONLY_NOT_A_SIGNED_TOKEN",
+        "configuration": {
+          "content": {
+            "targetId": "FILLER-01",
+            "kind": "EQUIPMENT",
+            "equipmentId": "101",
+            "connectorType": "equipment-http",
+            "configVersion": 7,
+            "enabled": true,
+            "settings": {
+              "protocol": "HTTP",
+              "approvedEndpoint": "http://equipment-simulator:8080/equipment/FILLER-01",
+              "pollIntervalMs": 5000,
+              "timeoutMs": 2000,
+              "staleSec": 20,
+              "credentialRef": null,
+              "mappings": [
+                {
+                  "mappingId": "301",
+                  "metricCode": "total_count",
+                  "sourcePath": "$.totalCount",
+                  "dataType": "INTEGER",
+                  "valueKind": "COUNTER",
+                  "unit": "EA",
+                  "scale": "1",
+                  "offset": "0",
+                  "enabled": true
+                }
+              ]
+            }
+          },
+          "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd"
+        },
+        "events": [
+          {
+            "eventId": "00000000-0000-0000-0000-000000000064",
+            "type": "mes.telemetry.collected.v1",
+            "schemaVersion": 1,
+            "source": "mes.equipment-connector",
+            "occurredAt": "2026-11-12T14:00:05Z",
+            "correlationId": "00000000-0000-0000-0000-0000000000ca",
+            "data": {
+              "equipmentId": "101",
+              "targetId": "FILLER-01",
+              "instanceId": "equipment-connector-1",
+              "streamId": "00000000-0000-0000-0000-00000000012c",
+              "sequenceNo": "1024",
+              "configVersion": 7,
+              "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+              "metrics": [
+                {
+                  "metricCode": "total_count",
+                  "mappingId": "301",
+                  "numericValue": "524",
+                  "unit": "EA",
+                  "quality": "GOOD"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "수집 ACK",
+      "schema": "mes.schemas.json#/$defs/TelemetryBatchAck",
+      "value": {
+        "items": [
+          {
+            "eventId": "00000000-0000-0000-0000-000000000064",
+            "telemetryId": "601",
+            "outcome": "STORED",
+            "receivedAt": "2026-11-12T14:00:06Z"
+          }
+        ],
+        "correlationId": "00000000-0000-0000-0000-0000000000ca"
+      }
+    },
+    {
+      "name": "Mock 분석 요청",
+      "schema": "mes.schemas.json#/$defs/AnalysisRequest",
+      "value": {
+        "requestId": "00000000-0000-0000-0000-0000000000c9",
+        "equipmentId": "101",
+        "targetId": "AI-MOCK-01",
+        "periodStart": "2026-11-12T13:00:00Z",
+        "periodEnd": "2026-11-12T14:00:00Z",
+        "analysisKind": "MAINTENANCE_RISK"
+      }
+    },
+    {
+      "name": "분석 콜백",
+      "schema": "mes.schemas.json#/$defs/AnalysisCompletedEnvelope",
+      "value": {
+        "event": {
+          "eventId": "00000000-0000-0000-0000-00000000006b",
+          "type": "mes.ai.analysis.completed.v1",
+          "schemaVersion": 1,
+          "source": "mes.ai-connector",
+          "occurredAt": "2026-11-12T14:00:05Z",
+          "correlationId": "00000000-0000-0000-0000-0000000000ca",
+          "data": {
+            "jobId": "00000000-0000-0000-0000-0000000000c8",
+            "attempt": 1,
+            "provider": "MOCK",
+            "model": "mock-maintenance-v1",
+            "inputPeriodStart": "2026-11-12T13:00:00Z",
+            "inputPeriodEnd": "2026-11-12T14:00:00Z",
+            "dataCoverage": "0.98",
+            "resultVersion": 1,
+            "risk": "LOW",
+            "evidence": {
+              "summary": "모의 분석 결과입니다. 실제 예측이 아닙니다.",
+              "observations": [
+                "시뮬레이터 데이터의 모의 추세"
+              ],
+              "recommendations": [
+                "실제 모델 연결 후 검증 필요"
+              ],
+              "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+            },
+            "mockFlag": true,
+            "completedAt": "2026-11-12T14:00:05Z"
+          }
+        }
+      }
+    },
+    {
+      "name": "늦은 분석 결과 ACK",
+      "schema": "mes.schemas.json#/$defs/ResultAck",
+      "value": {
+        "resultId": "901",
+        "jobId": "00000000-0000-0000-0000-0000000000c8",
+        "attempt": 1,
+        "accepted": false,
+        "outcome": "LATE_RECORDED",
+        "state": "CANCELLED"
+      }
+    },
+    {
+      "name": "내 알림 읽음",
+      "schema": "mes.schemas.json#/$defs/ReadAck",
+      "value": {
+        "notificationId": "801",
+        "readAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "공통 오류",
+      "schema": "mes.schemas.json#/$defs/Problem",
+      "value": {
+        "type": "urn:mes:problem:version-conflict",
+        "title": "다른 요청이 먼저 변경했습니다.",
+        "status": 409,
+        "code": "VersionConflict",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "detail": "재조회 후 현재 상태를 확인하세요."
+      }
+    },
+    {
+      "name": "무료 로컬 실행 정책",
+      "schema": "mes.schemas.json#/$defs/ExecutionPolicy",
+      "value": {
+        "cloudAiEnabled": false,
+        "externalDeliveryEnabled": false,
+        "defaultAiProvider": "MOCK",
+        "note": "명세 검증만 수행합니다. 외부 API를 호출하지 않습니다."
+      }
+    }
+  ],
+  "negative": [
+    {
+      "name": "버전 누락",
+      "schema": "mes.schemas.json#/$defs/Command",
+      "value": {}
+    },
+    {
+      "name": "EA 소수 수량",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000190",
+        "kind": "REJECT",
+        "qty": 1.5,
+        "reason": "CAP_DAMAGE",
+        "occurredAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "수량 0",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000190",
+        "kind": "REJECT",
+        "qty": 0,
+        "reason": "CAP_DAMAGE",
+        "occurredAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "필수 사유 없는 감소정정",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000190",
+        "kind": "TOTAL_ADJUST_DOWN",
+        "qty": 3,
+        "reason": null,
+        "occurredAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "기존 초안의 signedQty 혼입",
+      "schema": "mes.schemas.json#/$defs/EntryInput",
+      "value": {
+        "clientEntryId": "00000000-0000-0000-0000-000000000190",
+        "kind": "REJECT",
+        "qty": 3,
+        "reason": "CAP_DAMAGE",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "signedQty": -3
+      }
+    },
+    {
+      "name": "문자열 아닌 대형 DB ID",
+      "schema": "mes.schemas.json#/$defs/TelemetryData",
+      "value": {
+        "equipmentId": 101,
+        "targetId": "FILLER-01",
+        "instanceId": "equipment-connector-1",
+        "streamId": "00000000-0000-0000-0000-00000000012c",
+        "sequenceNo": "1024",
+        "configVersion": 7,
+        "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+        "metrics": [
+          {
+            "metricCode": "total_count",
+            "mappingId": "301",
+            "numericValue": "524",
+            "unit": "EA",
+            "quality": "GOOD"
+          }
+        ]
+      }
+    },
+    {
+      "name": "숫자형 sequence 금지",
+      "schema": "mes.schemas.json#/$defs/TelemetryData",
+      "value": {
+        "equipmentId": "101",
+        "targetId": "FILLER-01",
+        "instanceId": "equipment-connector-1",
+        "streamId": "00000000-0000-0000-0000-00000000012c",
+        "sequenceNo": 1024,
+        "configVersion": 7,
+        "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+        "metrics": [
+          {
+            "metricCode": "total_count",
+            "mappingId": "301",
+            "numericValue": "524",
+            "unit": "EA",
+            "quality": "GOOD"
+          }
+        ]
+      }
+    },
+    {
+      "name": "양쪽 측정값 동시 지정",
+      "schema": "mes.schemas.json#/$defs/TelemetryMetric",
+      "value": {
+        "metricCode": "total_count",
+        "mappingId": "301",
+        "numericValue": "524",
+        "unit": "EA",
+        "quality": "GOOD",
+        "textValue": "RUNNING"
+      }
+    },
+    {
+      "name": "값 없는 BAD 측정",
+      "schema": "mes.schemas.json#/$defs/TelemetryMetric",
+      "value": {
+        "metricCode": "x",
+        "mappingId": "301",
+        "quality": "BAD"
+      }
+    },
+    {
+      "name": "콜백의 accepted 위조",
+      "schema": "mes.schemas.json#/$defs/AnalysisResultInput",
+      "value": {
+        "jobId": "00000000-0000-0000-0000-0000000000c8",
+        "attempt": 1,
+        "provider": "MOCK",
+        "model": "mock-maintenance-v1",
+        "inputPeriodStart": "2026-11-12T13:00:00Z",
+        "inputPeriodEnd": "2026-11-12T14:00:00Z",
+        "dataCoverage": "0.98",
+        "resultVersion": 1,
+        "risk": "LOW",
+        "evidence": {
+          "summary": "모의 분석 결과입니다. 실제 예측이 아닙니다.",
+          "observations": [
+            "시뮬레이터 데이터의 모의 추세"
+          ],
+          "recommendations": [
+            "실제 모델 연결 후 검증 필요"
+          ],
+          "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+        },
+        "mockFlag": true,
+        "completedAt": "2026-11-12T14:00:05Z",
+        "accepted": true
+      }
+    },
+    {
+      "name": "Mock 표시 누락",
+      "schema": "mes.schemas.json#/$defs/AnalysisResultInput",
+      "value": {
+        "jobId": "00000000-0000-0000-0000-0000000000c8",
+        "attempt": 1,
+        "provider": "MOCK",
+        "model": "mock-maintenance-v1",
+        "inputPeriodStart": "2026-11-12T13:00:00Z",
+        "inputPeriodEnd": "2026-11-12T14:00:00Z",
+        "dataCoverage": "0.98",
+        "resultVersion": 1,
+        "risk": "LOW",
+        "evidence": {
+          "summary": "모의 분석 결과입니다. 실제 예측이 아닙니다.",
+          "observations": [
+            "시뮬레이터 데이터의 모의 추세"
+          ],
+          "recommendations": [
+            "실제 모델 연결 후 검증 필요"
+          ],
+          "inputHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "configHash": "5a96d3f09f394635df168cb4ba5ca502d33e717fe9a5961625050ebf87b6d92a"
+        },
+        "mockFlag": false,
+        "completedAt": "2026-11-12T14:00:05Z"
+      }
+    },
+    {
+      "name": "클라우드 실행 정책 위조",
+      "schema": "mes.schemas.json#/$defs/ExecutionPolicy",
+      "value": {
+        "cloudAiEnabled": true,
+        "externalDeliveryEnabled": false,
+        "defaultAiProvider": "MOCK",
+        "note": "invalid"
+      }
+    },
+    {
+      "name": "원천 이벤트에 토큰 저장",
+      "schema": "mes.events.schema.json#/$defs/TelemetryCollected",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000064",
+        "type": "mes.telemetry.collected.v1",
+        "schemaVersion": 1,
+        "source": "mes.equipment-connector",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "equipmentId": "101",
+          "targetId": "FILLER-01",
+          "instanceId": "equipment-connector-1",
+          "streamId": "00000000-0000-0000-0000-00000000012c",
+          "sequenceNo": "1024",
+          "configVersion": 7,
+          "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+          "metrics": [
+            {
+              "metricCode": "total_count",
+              "mappingId": "301",
+              "numericValue": "524",
+              "unit": "EA",
+              "quality": "GOOD"
+            }
+          ]
+        },
+        "collectionAuthorization": "forbidden"
+      }
+    },
+    {
+      "name": "모르는 이벤트 버전",
+      "schema": "mes.events.schema.json",
+      "value": {
+        "eventId": "00000000-0000-0000-0000-000000000064",
+        "type": "mes.telemetry.collected.v1",
+        "schemaVersion": 2,
+        "source": "mes.equipment-connector",
+        "occurredAt": "2026-11-12T14:00:05Z",
+        "correlationId": "00000000-0000-0000-0000-0000000000ca",
+        "data": {
+          "equipmentId": "101",
+          "targetId": "FILLER-01",
+          "instanceId": "equipment-connector-1",
+          "streamId": "00000000-0000-0000-0000-00000000012c",
+          "sequenceNo": "1024",
+          "configVersion": 7,
+          "configHash": "fd9375745525f48229e5158e5ff38812e7f504eb0db20623cee4d8b4220d08bd",
+          "metrics": [
+            {
+              "metricCode": "total_count",
+              "mappingId": "301",
+              "numericValue": "524",
+              "unit": "EA",
+              "quality": "GOOD"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "유효하지 않은 날짜",
+      "schema": "mes.schemas.json#/$defs/UtcTime",
+      "value": "2026-02-30T12:00:00Z"
+    },
+    {
+      "name": "UTC가 아닌 전송 시각",
+      "schema": "mes.schemas.json#/$defs/UtcTime",
+      "value": "2026-11-12T23:00:00+09:00"
+    },
+    {
+      "name": "키 원문 추가",
+      "schema": "mes.schemas.json#/$defs/AiSettings",
+      "value": {
+        "providerKind": "MOCK",
+        "approvedEndpoint": null,
+        "model": "mock-maintenance-v1",
+        "credentialRef": null,
+        "timeoutMs": 5000,
+        "apiKey": "not-a-real-key"
+      }
+    }
+  ]
+}

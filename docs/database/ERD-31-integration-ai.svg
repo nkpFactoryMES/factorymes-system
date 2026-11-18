@@ -1,0 +1,109 @@
+<svg xmlns="htt<LOCAL_PATH>" width="3000" height="2400" viewBox="0 0 3000 2400">
+<rect width="100%" height="100%" fill="#F4F7FB"/>
+<text x="60" y="42" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="46" font-weight="700" fill="#142438">02  연동 설정 · 측정 수집 · AI</text>
+<text x="64" y="116" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="26" font-weight="400" fill="#53677D">ORACLE ERD  |  검증된 31테이블 기준  |  영역별 주요 키 · 실제 FK 관계 요약</text>
+<text x="64" y="163" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#53677D">전체 53 FK · 모든 컬럼은 ERD-31.mmd / 데이터사전-31.md 참조 · 별도 34테이블 안 미반영</text>
+<text x="64" y="204" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="21" font-weight="400" fill="#53677D">선: 배치상 인접한 실제 FK만 표시 · 1 / 0..1 / 0..N = 참조 개수 · 카드의 외부 FK는 다른 영역 참조</text>
+<polyline points="940,450 1060,450" fill="none" stroke="#087F8C" stroke-width="3"/>
+<text x="965" y="422" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#087F8C">1 : 0..1</text>
+<polyline points="1940,450 2060,450" fill="none" stroke="#087F8C" stroke-width="3"/>
+<text x="1965" y="422" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#087F8C">1 : 0..N</text>
+<polyline points="500,620 500,750" fill="none" stroke="#087F8C" stroke-width="3"/>
+<text x="465" y="657" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#087F8C">1 : 0..1</text>
+<polyline points="940,1390 1060,1390" fill="none" stroke="#087F8C" stroke-width="3"/>
+<text x="965" y="1362" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#087F8C">0..1 : 0..N</text>
+<polyline points="2500,1090 2500,1220" fill="none" stroke="#087F8C" stroke-width="3"/>
+<text x="2465" y="1127" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="700" fill="#087F8C">1 : 0..N</text>
+<rect x="60" y="280" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="76" y="300" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="98" y="302" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">INTEGRATION_TARGET</text>
+<text x="98" y="348" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">설비/AI 연동 대상 원본</text>
+<text x="98" y="392" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  TARGET_ID  NUMBER(19,0)</text>
+<text x="98" y="426" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  EQUIPMENT_ID  NUMBER(19,0)</text>
+<text x="98" y="460" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    KIND  VARCHAR2(20 CHAR)</text>
+<text x="98" y="494" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    CONFIG_VERSION  NUMBER(12,0)</text>
+<text x="98" y="582" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">13 columns  ·  PK TARGET_ID</text>
+<rect x="1060" y="280" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1076" y="300" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1098" y="302" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">EQUIPMENT_CONNECTION</text>
+<text x="1098" y="348" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">설비 연결 원본 설정</text>
+<text x="1098" y="392" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK/FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="1098" y="426" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  KIND  VARCHAR2(20 CHAR)</text>
+<text x="1098" y="582" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">13 columns  ·  PK TARGET_ID</text>
+<rect x="2060" y="280" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="2076" y="300" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="2098" y="302" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">EQUIPMENT_TAG_MAPPING</text>
+<text x="2098" y="348" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">태그 매핑·최신 수치 읽기 모델</text>
+<text x="2098" y="392" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  MAPPING_ID  NUMBER(19,0)</text>
+<text x="2098" y="426" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="2098" y="582" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">16 columns  ·  PK MAPPING_ID</text>
+<rect x="60" y="750" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="76" y="770" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="98" y="772" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">AI_PROVIDER_CONFIG</text>
+<text x="98" y="818" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">Cloud/Local/Mock AI 설정</text>
+<text x="98" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK/FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="98" y="896" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  KIND  VARCHAR2(20 CHAR)</text>
+<text x="98" y="1052" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">10 columns  ·  PK TARGET_ID</text>
+<rect x="1060" y="750" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1076" y="770" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1098" y="772" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">CONNECTOR_RUNTIME</text>
+<text x="1098" y="818" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">커넥터 인스턴스별 적용 상태</text>
+<text x="1098" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK/FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="1098" y="896" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  INSTANCE_ID  VARCHAR2(64 CHAR)</text>
+<text x="1098" y="1052" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">10 columns  ·  PK TARGET_ID,INSTANCE_ID</text>
+<rect x="2060" y="750" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="2076" y="770" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="2098" y="772" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">TELEMETRY_EVENT</text>
+<text x="2098" y="818" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">설비 수집 이벤트 envelope</text>
+<text x="2098" y="862" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  TELEMETRY_ID  NUMBER(19,0)</text>
+<text x="2098" y="896" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  EQUIPMENT_ID  NUMBER(19,0)</text>
+<text x="2098" y="930" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="2098" y="964" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    EVENT_ID  VARCHAR2(64 CHAR)</text>
+<text x="2098" y="998" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    STREAM_ID  VARCHAR2(64 CHAR)</text>
+<text x="2098" y="1052" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">13 columns  ·  PK TELEMETRY_ID</text>
+<rect x="60" y="1220" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="76" y="1240" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="98" y="1242" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">ANALYSIS_SNAPSHOT</text>
+<text x="98" y="1288" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">분석 당시 입력 스냅샷</text>
+<text x="98" y="1332" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  SNAPSHOT_ID  NUMBER(19,0)</text>
+<text x="98" y="1366" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  EQUIPMENT_ID  NUMBER(19,0)</text>
+<text x="98" y="1400" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    PAYLOAD  CLOB</text>
+<text x="98" y="1522" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">9 columns  ·  PK SNAPSHOT_ID</text>
+<rect x="1060" y="1220" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1076" y="1240" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1098" y="1242" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">INTEGRATION_JOB</text>
+<text x="1098" y="1288" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">연동/AI 작업·현재 시도 상태</text>
+<text x="1098" y="1332" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  JOB_ID  VARCHAR2(36 CHAR)</text>
+<text x="1098" y="1366" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  TARGET_ID  NUMBER(19,0)</text>
+<text x="1098" y="1400" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  ACTOR_ID  NUMBER(19,0)</text>
+<text x="1098" y="1434" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  SNAPSHOT_ID  NUMBER(19,0)</text>
+<text x="1098" y="1468" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    CONFIG_VERSION  NUMBER(12,0)</text>
+<text x="1098" y="1522" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">16 columns  ·  PK JOB_ID</text>
+<rect x="2060" y="1220" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="2076" y="1240" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="2098" y="1242" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">TELEMETRY_METRIC</text>
+<text x="2098" y="1288" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">이벤트별 지표 정규화 값</text>
+<text x="2098" y="1332" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK/FK  TELEMETRY_ID  NUMBER(19,0)</text>
+<text x="2098" y="1366" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  METRIC_CODE  VARCHAR2(40 CHAR)</text>
+<text x="2098" y="1400" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  MAPPING_ID  NUMBER(19,0)</text>
+<text x="2098" y="1522" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">8 columns  ·  PK TELEMETRY_ID,METRIC_CODE</text>
+<rect x="60" y="1690" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="76" y="1710" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="98" y="1712" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">AI_ANALYSIS_RESULT</text>
+<text x="98" y="1758" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">AI 시도별 결과·채택 여부</text>
+<text x="98" y="1802" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  RESULT_ID  NUMBER(19,0)</text>
+<text x="98" y="1836" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">FK  JOB_ID  VARCHAR2(36 CHAR)</text>
+<text x="98" y="1992" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">15 columns  ·  PK RESULT_ID</text>
+<rect x="1060" y="1690" width="880" height="340" rx="18" fill="#FFFFFF" stroke="#CAD7E4" stroke-width="2"/>
+<rect x="1076" y="1710" width="6" height="300" rx="2" fill="#087F8C" stroke="#087F8C" stroke-width="2"/>
+<text x="1098" y="1712" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="29" font-weight="700" fill="#087F8C">OUTBOX_EVENT</text>
+<text x="1098" y="1758" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="23" font-weight="400" fill="#142438">트랜잭션 후 전달할 이벤트</text>
+<text x="1098" y="1802" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">PK  OUTBOX_ID  NUMBER(19,0)</text>
+<text x="1098" y="1836" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    EVENT_ID  VARCHAR2(64 CHAR)</text>
+<text x="1098" y="1870" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    PAYLOAD  CLOB</text>
+<text x="1098" y="1904" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="20" font-weight="400" fill="#53677D">    STATUS  VARCHAR2(10 CHAR)</text>
+<text x="1098" y="1992" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="18" font-weight="400" fill="#087F8C">13 columns  ·  PK OUTBOX_ID</text>
+<text x="64" y="2225" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="25" font-weight="700" fill="#142438">이 영역 11개 테이블  |  전체 기준 31개  |  표시 관계 5개 / 실제 FK 전체 54개</text>
+<text x="64" y="2272" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="22" font-weight="400" fill="#53677D">Claude 재검증 결과는 README 참조</text>
+<text x="64" y="2313" dominant-baseline="text-before-edge" font-family="Malgun Gothic, sans-serif" font-size="21" font-weight="400" fill="#53677D">그림은 주요 키 요약입니다. 상태 전이·역할·원장 합계·서명 토큰 검증은 애플리케이션 책임입니다.</text>
+</svg>

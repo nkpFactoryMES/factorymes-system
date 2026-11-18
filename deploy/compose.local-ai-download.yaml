@@ -1,0 +1,7 @@
+services:
+  local-ai:
+    networks:
+    - inference
+    - model-download
+networks:
+  model-download: {}

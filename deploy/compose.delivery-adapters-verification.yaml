@@ -1,0 +1,8 @@
+services:
+  tooling:
+    networks:
+    - app
+    - oracle-data
+    - delivery-capture
+    secrets:
+    - jobs-worker_client_secret

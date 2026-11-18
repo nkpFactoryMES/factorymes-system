@@ -1,0 +1,5 @@
+services:
+  tooling:
+    secrets:
+    - equipment-connector_client_secret
+    - integration-gateway_client_secret

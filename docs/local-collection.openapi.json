@@ -1,0 +1,138 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FactoryMES local Mock collection supplement",
+    "version": "2026-11-13",
+    "description": "Adds catalog and administrator sample reads; existing v1.1 files remain unchanged."
+  },
+  "paths": {
+    "/internal/v1/configurations": {
+      "get": {
+        "summary": "Gateway catalog for the equipment connector",
+        "description": "equipment-connector ServiceJwt + integration:config:resolve. Redis catalog TTL5s. Returns target-code array; includes disabled targets.",
+        "responses": {
+          "200": {
+            "description": "Target codes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ServiceJwt": []
+          }
+        ]
+      }
+    },
+    "/api/v1/integration-targets/{targetId}/samples": {
+      "get": {
+        "summary": "Administrator telemetry history",
+        "description": "ADMIN Cookie; no-store. Keyset descending telemetryId, limit1..100(default20), cursor last telemetryId. IDs/sequence and decimal values are strings.",
+        "parameters": [
+          {
+            "name": "targetId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PageResult<SampleView>; occurredAt and receivedAt UTC; normalized metrics numericValue or textValue."
+          }
+        },
+        "security": [
+          {
+            "SessionCookie": []
+          }
+        ]
+      }
+    },
+    "/internal/v1/auth/token": {
+      "post": {
+        "summary": "Existing local service token endpoint",
+        "description": "Unauthenticated token exchange with constant-time checked local client secret and audience allowlist. Never proxied by Web. Request: clientId,clientSecret,audience; response:accessToken,tokenType,expiresIn,scope. 20/min existing auth limiter; clients cache for240s. This documents an existing contract gap, not a cloud API key.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "clientId": {
+                    "type": "string"
+                  },
+                  "clientSecret": {
+                    "type": "string",
+                    "writeOnly": true
+                  },
+                  "audience": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "clientId",
+                  "clientSecret",
+                  "audience"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audience-bound local ServiceJwt"
+          },
+          "401": {
+            "description": "Invalid client/audience"
+          },
+          "429": {
+            "description": "Existing limiter"
+          }
+        },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ServiceJwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "SessionCookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "mes.session"
+      }
+    }
+  }
+}

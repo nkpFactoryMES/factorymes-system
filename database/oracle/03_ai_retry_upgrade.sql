@@ -1,0 +1,11 @@
+-- Existing databases: additive, repeatable change. No rows or passwords are reset.
+DECLARE
+    n NUMBER;
+BEGIN
+    SELECT COUNT(*) INTO n FROM USER_TAB_COLUMNS
+    WHERE TABLE_NAME = 'INTEGRATION_JOB' AND COLUMN_NAME = 'RETRY_AT_UTC';
+    IF n = 0 THEN
+        EXECUTE IMMEDIATE 'ALTER TABLE INTEGRATION_JOB ADD RETRY_AT_UTC TIMESTAMP(6)';
+    END IF;
+END;
+/

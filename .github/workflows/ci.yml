@@ -1,0 +1,23 @@
+name: system-checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tooling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Verify pinned public packages
+        shell: pwsh
+        run: ./build/restore-packages.ps1
+      - name: Build and verify protocol with no database or external provider
+        shell: pwsh
+        run: ./tools/check-system.ps1 -SkipPackageDownload
+      - name: Build isolated verification image
+        run: docker build --tag factorymes/tooling:ci .

@@ -1,0 +1,6 @@
+services:
+  tooling:
+    secrets:
+    - jobs-worker_client_secret
+    - ai-connector_client_secret
+    - integration-gateway_client_secret
