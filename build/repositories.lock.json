@@ -11,8 +11,8 @@
     {
       "service": "mes-backend",
       "repo": "factorymes-backend",
-      "ref": "v1.1.0",
-      "commit": "e2dc06e03ebefac234ea8f8c4c1cf6c19942c05e"
+      "ref": "v1.1.1",
+      "commit": "35b21c06298e68430fe08a6b5c3cd4ab1a683cf6"
     },
     {
       "service": "integration-gateway",
