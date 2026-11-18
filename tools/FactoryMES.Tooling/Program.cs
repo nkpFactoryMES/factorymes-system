@@ -51,7 +51,7 @@ if (mode == "init-secrets")
     );
     ReadOrCreate(
         "oracle_bootstrap_sql",
-        () => $"SET ECHO OFF\nSET VERIFY OFF\nCONNECT factorymes/\"{appPassword}\"@//localhost:1521/FREEPDB1\n@/opt/factorymes/schema/01_tables.sql\n@/opt/factorymes/schema/02_indexes.sql\nEXIT\n"
+        () => $"SET ECHO OFF\nSET VERIFY OFF\nCONNECT factorymes/\"{appPassword}\"@//localhost:1521/FREEPDB1\n@/opt/factorymes/schema/01_tables.sql\n@/opt/factorymes/schema/02_indexes.sql\n@/opt/factorymes/schema/05_notification_settings_upgrade.sql\nEXIT\n"
     );
     foreach (var prefix in new[]
     {
@@ -178,6 +178,13 @@ if (mode == "verify-modbus-collection")
 if (mode == "verify-auto-production")
 {
     await AutoProductionVerification.RunAsync(db, ReadSecret);
+    return;
+}
+
+if (mode == "upgrade-notification-settings")
+{
+    await NotificationSettingsSchema.ApplyAsync(db);
+    Console.WriteLine("Notification settings additive upgrade completed; existing rows retained.");
     return;
 }
 

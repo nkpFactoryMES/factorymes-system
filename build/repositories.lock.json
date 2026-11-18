@@ -5,14 +5,14 @@
     {
       "service": "web",
       "repo": "factorymes-web",
-      "ref": "v1.0.0",
-      "commit": "4a67d489e89029658f5fc4f9558d170879c423da"
+      "ref": "v1.1.0",
+      "commit": "2d05837500b6de42f46230227fc593291856e0ff"
     },
     {
       "service": "mes-backend",
       "repo": "factorymes-backend",
-      "ref": "v1.0.0",
-      "commit": "91af840e87c189d4bd7f1de7259a292e71558909"
+      "ref": "v1.1.0",
+      "commit": "e2dc06e03ebefac234ea8f8c4c1cf6c19942c05e"
     },
     {
       "service": "integration-gateway",

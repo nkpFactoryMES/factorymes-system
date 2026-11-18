@@ -67,3 +67,18 @@ Windows Edge는 자동 탐색하며 다른 환경에서는 Playwright Chromium�
 SHA256 digest만 받습니다. 배포 전 컨테이너·이미지를 ignored `.deploy`에 기록하고,
 다른 서비스 컨테이너 ID와 이미지가 그대로인지 비교합니다. 실패 시 자동 롤백은 하지 않으며
 기록한 이전 이미지로 다시 실행합니다. 실제 원격 서버 자동 배포는 구성하지 않았습니다.
+이 스크립트는 PowerShell 7에서 실행합니다(Windows PowerShell 5.1은 docker 진행 메시지를 오류로 봅니다).
+
+## 알림 채널 설정(Backend·Web 1.1.0)
+
+경보와 AI 분석 완료 알림은 사용자·이벤트별 이메일·채팅 모드(OFF·MOCK·LOCAL) 설정을
+알림 생성 시점에 스냅샷으로 남기고 그대로 발송 원장을 만듭니다. 설정이 없으면 알림함만 받습니다.
+기존 데이터베이스는 `database/oracle/05_notification_settings_upgrade.sql`(반복 실행 가능,
+기존 행 보존) 또는 `tooling upgrade-notification-settings`로 테이블을 추가합니다.
+새 설치는 bootstrap에 포함됩니다. 이 기능을 쓰는 Backend·Web만 `FactoryMES.Contracts`
+1.1.0을 받고, 나머지 서비스와 검증 도구는 1.0.0을 그대로 씁니다.
+
+브라우저 검증: `tests/browser/verify-notification-settings.cjs`(화면·권한·충돌),
+`tests/browser/verify-notification-routing.cjs`(실제 HIGH 경보 발생·복구와 수동 AI 완료가
+설정대로 Mailpit·채팅 수신기·Mock으로 가는지). 예약 AI 알림 경로는 매일 예약 실행과 GPU가
+필요해 자동 검증에 넣지 않았습니다.

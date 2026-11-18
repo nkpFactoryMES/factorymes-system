@@ -23,6 +23,7 @@ const adminMenu = [
   ['설비 연결', '/equipment-connections', '설비 연결·수집'],
   ['설비 분석', '/analyses', '설비 분석(Mock·로컬 AI)'],
   ['알림함', '/inbox', '알림함'],
+  ['알림 설정', '/notification-settings', '알림 설정'],
   ['발송 이력', '/deliveries', '알림 발송 이력'],
   ['기준정보', '/master-data', '기준정보'],
   ['대시보드', '/dashboard', '대시보드']
@@ -31,7 +32,8 @@ const portalMenu = [
   '대시보드',
   '작업지시',
   '경보',
-  '알림함'
+  '알림함',
+  '알림 설정'
 ];
 
 function check(name) {

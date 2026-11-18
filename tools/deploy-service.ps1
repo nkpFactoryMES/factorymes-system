@@ -79,7 +79,12 @@ try {
   $override = Join-Path '.deploy' ($Service + '.json')
   @{ services = @{ $Service = @{ image = $Image } } } | ConvertTo-Json -Depth 5 |
     Set-Content -LiteralPath $override -Encoding utf8
-  docker compose -f deploy/compose.yaml -f deploy/compose.local-ai.yaml `
+  # 네트워크 주소·비밀 경로 같은 로컬 값은 ignored .env에서 읽는다(Compose 기본 위치는 deploy/라 직접 지정).
+  $envFile = @()
+  if (Test-Path -LiteralPath '.env') {
+    $envFile = @('--env-file', '.env')
+  }
+  docker compose @envFile -f deploy/compose.yaml -f deploy/compose.local-ai.yaml `
     -f deploy/compose.delivery-adapters.yaml -f $override `
     up -d --no-build --no-deps --wait $Service
   if ($LASTEXITCODE -ne 0) {
